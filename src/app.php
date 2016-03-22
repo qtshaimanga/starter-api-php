@@ -9,7 +9,7 @@ $yolo = array(
  );
 
 $pedometerData = array(
-       '01'=> array(
+  [
          'numberOfSteps' => '100',
          'distance' => '2',
          'currentCadence' => '5',
@@ -17,7 +17,16 @@ $pedometerData = array(
          'floorsDescended' => '1',
          'startDate' => '2016-03-20',
          'endDate' => '2016-03-21',
-     )
+  ],
+  [
+         'numberOfSteps' => '180',
+         'distance' => '3',
+         'currentCadence' => '4',
+         'floorsAscended' => '4',
+         'floorsDescended' => '1',
+         'startDate' => '2016-03-21',
+         'endDate' => '2016-03-22',
+  ]
  );
 
  $app->get('/', function() use ($yolo) {
@@ -29,12 +38,14 @@ $pedometerData = array(
      return json_encode($pedometerData);
  });
 
+/*
  $app->get('/pedometerData/{stockcode}', function (Silex\Application $app, $stockcode) use ($pedometerData) {
      if (!isset($pedometerData[$stockcode])) {
          $app->abort(404, "Stockcode {$stockcode} does not exist.");
      }
      return json_encode($pedometerData[$stockcode]);
  });
+*/
 
  // LocationData
  $app->get('/locationData/', function () use ($app) {

@@ -1,6 +1,7 @@
 <?php
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -56,27 +57,45 @@ $pedometerData = array(
 
  });
 
- $app->post('/locationDataSend/', function (Request $request){
-    $id = $request->get('id');
-    $nom = $request->get('nom');
-    $prenom = $request->get('prenom');
-    $couleur = $request->get('couleur');
-    $date = $request->get('date');
-    $longitude = $request->get('longitude');
-    $latitude = $request->get('latitude');
 
-    $locationData = array(
-      'id' => $id,
-      'nom' => $nom,
-      'prenom' => $prenom,
-      'couleur' => $couleur,
-      'date' => $date,
-      'longitude' => $longitude,
-      'latitude' => $latitude,
+$app->before(function (Request $request) {
+    if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
+        $data = json_decode($request->getContent(), true);
+        $request->request->replace(is_array($data) ? $data : array());
+    }
+});
+
+ $app->post('/locationDataSend/', function (Request $request) use ($app){
+
+    $post = array(
+        'id' => $request->request->get('id'),
+        'nom'  => $request->request->get('nom'),
+        'prenom'  => $request->request->get('prenom'),
+        'couleur'  => $request->request->get('couleur'),
+        'date'  => $request->request->get('date'),
+        'longitude'  => $request->request->get('longitude'),
+        'latitude'  => $request->request->get('latitude'),
     );
 
-    return new Response('Data sent', 201);
+
+    //$sql = 'INSERT INTO "main"."locationData" ("id","nom","prenom","couleur","date","longitude","latitude") VALUES
+    //('.$post[id].','.$post[nom].','.$post[prenom].','.$post[couleur].','.$post[date].','.$post[longitude].','.$post[latitude].')';
+
+
+    $sql = 'INSERT INTO "main"."locationData" ("id","nom","prenom","couleur","date","longitude","latitude") VALUES
+    ('.$post[id].',"'.$post[nom].'","'.$post[prenom].'","'.$post[couleur].'","'.$post[date].'","'.$post[longitude].'","'.$post[latitude].'")';
+
+
+
+    $data = $app['db']->fetchAll($sql);
+
+    //$post['id'] = createPost($post);
+    //return $app->json($post[id], 201);
+    return Response('Data sent', 201);
+
  });
+//curl -X POST -d '{"id": "","nom": "","prenom": "","couleur": "","date": "","longitude": "","latitude": ""}' http://localhost:8080/locationDataSend/ --header "Content-Type:application/json" -v
+
 
 
  $app->run();

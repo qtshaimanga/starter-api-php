@@ -3,3 +3,12 @@
 
 #### Run serve
     - php -S localhost:8080 -t serve serve/index.php
+
+
+#### Road map
+    - GET :
+      --
+      --
+
+    - POST :
+      --

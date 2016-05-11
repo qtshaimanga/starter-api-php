@@ -32,18 +32,20 @@ use Symfony\Component\HttpFoundation\Response;
        return  json_encode($pollens);
    });
 
+
  //GET WITH PARAMETERS -> RETURN DISTANCE
- $app->get('/graines/latitude={latitude}&longitude={longitude}', function (Silex\Application $app, $latitude, $longitude) use ($graines) {
+ //Type of request: http://localhost:8080/graines/latitude=408.6962578192132&longitude=-97.8127746582031
+ $app->get('/graines/latitude={latitude}&longitude={longitude}', function (Silex\Application $app, $latitude, $longitude) use ($app) {
     $sql = "SELECT rowid, * FROM GRAINE";
     $graines = $app['db']->fetchAll($sql);
 
     $distance = array();
     foreach ($graines as $index => $graine) {
-      $latitudeRef = $graine[latitude];
-      $longitudeRef = $graine[longitude];
+      $latitudeRef = $graine['latitude'];
+      $longitudeRef = $graine['longitude'];
 
       $calDistance = strval(sqrt(pow($latitudeRef-$latitude, 2)+pow($longitudeRef-$longitude, 2)));
-      $distance[$graine[rowid]] = $calDistance;
+      $distance[$graine['rowid']] = $calDistance;
     }
 
     if (!isset($graines)) {
@@ -54,7 +56,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 
  //POST
- /*
   $app->before(function (Request $request) {
       if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
           $data = json_decode($request->getContent(), true);
@@ -62,25 +63,47 @@ use Symfony\Component\HttpFoundation\Response;
       }
   });
 
- $app->post('/locationDataSend/', function (Request $request) use ($app){
+  $app->post('/users/', function (Request $request) use ($app){
+     $post = array(
+         'nom' => $request->request->get('nom'),
+         'prenom'  => $request->request->get('prenom'),
+         'email'  => $request->request->get('email'),
+         'parent'  => $request->request->get('parent'),
+     );
+     $sql = 'INSERT INTO "main"."USER" ("nom","prenom","email","parent") VALUES
+     ('.$post[nom].',"'.$post[prenom].'","'.$post[email].'","'.$post[parent].'")';
 
+     $data = $app['db']->fetchAll($sql);
+     return Response('USER sent', 201);
+  });
+
+ $app->post('/graines/', function (Request $request) use ($app){
     $post = array(
-        'id' => $request->request->get('id'),
-        'nom'  => $request->request->get('nom'),
-        'prenom'  => $request->request->get('prenom'),
-        'couleur'  => $request->request->get('couleur'),
-        'date'  => $request->request->get('date'),
+        'latitude' => $request->request->get('latitude'),
         'longitude'  => $request->request->get('longitude'),
-        'latitude'  => $request->request->get('latitude'),
+        'nom'  => $request->request->get('nom'),
+        'date'  => $request->request->get('date'),
+        'parent'  => $request->request->get('parent'),
     );
-
-    $sql = 'INSERT INTO "main"."locationData" ("id","nom","prenom","couleur","date","longitude","latitude") VALUES
-    ('.$post[id].',"'.$post[nom].'","'.$post[prenom].'","'.$post[couleur].'","'.$post[date].'","'.$post[longitude].'","'.$post[latitude].'")';
+    $sql = 'INSERT INTO "main"."GRAINE" ("latitude","longitude","nom","date","parent") VALUES
+    ('.$post[latitude].',"'.$post[longitude].'","'.$post[nom].'","'.$post[date].'","'.$post[parent].'")';
 
     $data = $app['db']->fetchAll($sql);
-
-    return Response('Data sent', 201);
+    return Response('GRAINE sent', 201);
  });
- */
+
+ $app->post('/pollens/', function (Request $request) use ($app){
+    $post = array(
+        'user' => $request->request->get('user'),
+        'latitude'  => $request->request->get('latitude'),
+        'longitude'  => $request->request->get('longitude'),
+    );
+    $sql = 'INSERT INTO "main"."POLLEN" ("user","latitude","longitude") VALUES
+    ('.$post[user].',"'.$post[latitude].'","'.$post[longitude].'")';
+
+    $data = $app['db']->fetchAll($sql);
+    return Response('POLLEN sent', 201);
+ });
+
 
  $app->run();

@@ -7,7 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
   //DATA
   $yolo = array(
     "Symbiosis" => "Camille, Etienne, Victoire, Quentin",
-   );
+  );
+
 
  //GET ALL
   $app->get('/', function() use ($yolo) {
@@ -15,25 +16,25 @@ use Symfony\Component\HttpFoundation\Response;
   });
 
   $app->get('/users/', function () use ($app) {
-      $sql = "SELECT * FROM USER";
+      $sql = "SELECT rowid, * FROM USER";
       $users = $app['db']->fetchAll($sql);
       return  json_encode($users);
   });
 
   $app->get('/graines/', function () use ($app) {
-     $sql = "SELECT * FROM GRAINE";
+     $sql = "SELECT rowid, * FROM GRAINE";
      $graines = $app['db']->fetchAll($sql);
      return  json_encode($graines);
-   });
+  });
 
-   $app->get('/pollens/', function () use ($app) {
-       $sql = "SELECT * FROM POLLEN";
+  $app->get('/pollens/', function () use ($app) {
+       $sql = "SELECT rowid, * FROM POLLEN";
        $pollens = $app['db']->fetchAll($sql);
        return  json_encode($pollens);
-   });
+  });
 
 
- //GET WITH PARAMETERS -> RETURN DISTANCE
+ //RETURN DISTANCE
  //Type of request: http://localhost:8080/graines/latitude=408.6962578192132&longitude=-97.8127746582031&perimeter=375
  $app->get('/graines/latitude={latitude}&longitude={longitude}&perimeter={perimeter}', function (Silex\Application $app, $latitude, $longitude, $perimeter) use ($app) {
     $sql = "SELECT rowid, * FROM GRAINE";
@@ -57,7 +58,36 @@ use Symfony\Component\HttpFoundation\Response;
  });
 
 
- //POST
+ //RETURN CHILDS AND PARENT OF A SEED
+ //Type of request: http://localhost:8080/graines/id=2
+ $app->get('/graines/id={id}', function (Silex\Application $app, $id) use ($app) {
+
+   $sql = "SELECT USER.nom, GRAINE.nom,USER.rowid, GRAINE.rowid FROM USER JOIN GRAINE ON GRAINE.rowid=USER.parent
+   WHERE USER.parent=$id
+   UNION SELECT GRAINE.nom, USER.nom, GRAINE.rowid, USER.rowid FROM GRAINE JOIN USER ON GRAINE.parent=USER.rowid
+   WHERE GRAINE.parent=(SELECT GRAINE.parent FROM USER JOIN GRAINE ON GRAINE.rowid=USER.parent WHERE USER.parent=$id)";
+
+   $parents = $app['db']->fetchAll($sql);
+   //PARENT = $parents[0] AND CHILS = $parent[n!=0]
+   return json_encode($parents);
+ });
+
+
+ //RETURN ALL CHILDS FOR EACH COLONIES OF AN USER
+ //Type of request: http://localhost:8080/users/id=2
+ $app->get('/users/id={id}', function (Silex\Application $app, $id) use ($app) {
+
+   $sql = "SELECT USER.nom as 'User.nom', USER.rowid as 'User.rowid', GRAINE.nom, GRAINE.rowid FROM USER
+   INNER JOIN GRAINE ON (USER.parent=GRAINE.rowid)
+   WHERE USER.parent
+   IN (SELECT GRAINE.rowid FROM GRAINE WHERE GRAINE.parent=$id)";
+
+   $colonies = $app['db']->fetchAll($sql);
+   return json_encode($colonies);
+ });
+
+
+ //POST ALL
   $app->before(function (Request $request) {
       if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
           $data = json_decode($request->getContent(), true);

@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 
  //GET WITH PARAMETERS -> RETURN DISTANCE
- //Type of request: http://localhost:8080/graines/latitude=408.6962578192132&longitude=-97.8127746582031
+ //Type of request: http://localhost:8080/graines/latitude=408.6962578192132&longitude=-97.8127746582031&perimeter=375
  $app->get('/graines/latitude={latitude}&longitude={longitude}&perimeter={perimeter}', function (Silex\Application $app, $latitude, $longitude, $perimeter) use ($app) {
     $sql = "SELECT rowid, * FROM GRAINE";
     $graines = $app['db']->fetchAll($sql);

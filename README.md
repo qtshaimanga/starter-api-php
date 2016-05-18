@@ -21,11 +21,12 @@
     > return all
   - /pollens/
     > return all
+
   - /graines/latitude=x&longitude=y&perimeter=d
     > return distance between one pts (x,y) and all seeds(x,y) in perimeter (d)
-  - /graines/id=x
+  - /graine/id=x
     > return childs and parent of a seed
-  - /users/id=x
+  - /user/id=x
     > return all childs foreach colonies for an user
 
 #### POST :

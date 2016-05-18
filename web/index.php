@@ -1,5 +1,4 @@
 <?php
-/*
 require_once __DIR__.'/../vendor/autoload.php';
 
 $app = new Silex\Application();
@@ -18,5 +17,3 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         'path'     => __DIR__.'/../bdd/symbiosis.sqlite',
     ),
 ));
-
-*/

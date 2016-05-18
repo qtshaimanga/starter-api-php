@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
     "Symbiosis" => "Camille, Etienne, Victoire, Quentin",
   );
 
-
  //GET ALL
   $app->get('/', function() use ($yolo) {
     return json_encode($yolo);
@@ -33,6 +32,15 @@ use Symfony\Component\HttpFoundation\Response;
        return  json_encode($pollens);
   });
 
+  //RETURN USER
+  $app->get('/users/id={id}&param={param}', function ($id, $param) use ($app) {
+      if($param == "all"){
+        $param = "*";
+      }
+      $sql = "SELECT rowid, $param FROM USER WHERE rowid=".$id;
+      $user = $app['db']->fetchAll($sql);
+      return  json_encode($user);
+  });
 
  //RETURN DISTANCE
  //Type of request: http://localhost:8080/graines/latitude=408.6962578192132&longitude=-97.8127746582031&perimeter=375
@@ -75,7 +83,7 @@ use Symfony\Component\HttpFoundation\Response;
 
  //RETURN ALL CHILDS FOR EACH COLONIES OF AN USER
  //Type of request: http://localhost:8080/users/id=2
- $app->get('/users/id={id}', function (Silex\Application $app, $id) use ($app) {
+ $app->get('/users/parents/id={id}', function (Silex\Application $app, $id) use ($app) {
 
    $sql = "SELECT USER.nom as 'User.nom', USER.rowid as 'User.rowid', GRAINE.nom, GRAINE.rowid FROM USER
    INNER JOIN GRAINE ON (USER.parent=GRAINE.rowid)
@@ -95,21 +103,24 @@ use Symfony\Component\HttpFoundation\Response;
       }
   });
 
-  $app->post('/users/', function (Request $request) use ($app){
+  $app->post('/user/', function (Request $request) use ($app){
      $post = array(
-         'nom' => $request->request->get('nom'),
-         'prenom'  => $request->request->get('prenom'),
+         'pseudo' => $request->request->get('pseudo'),
+         'date'  => $request->request->get('date'),
          'email'  => $request->request->get('email'),
          'parent'  => $request->request->get('parent'),
+         'mdp'  => $request->request->get('mdp'),
      );
-     $sql = 'INSERT INTO "main"."USER" ("nom","prenom","email","parent") VALUES
-     ('.$post[nom].',"'.$post[prenom].'","'.$post[email].'","'.$post[parent].'")';
+     $sql = 'INSERT INTO "main"."USER" ("pseudo","date","email","parent","mdp") VALUES
+     ("'.$post['pseudo'].'","'.$post['date'].'","'.$post['email'].'","'.$post['parent'].'","'.$post['mdp'].'")';
 
      $data = $app['db']->fetchAll($sql);
-     return Response('USER sent', 201);
+     $rowid = $app['db']->lastInsertId();
+
+     return new Response(json_encode('USER sent'), 200, ['Data' => $rowid]);
   });
 
- $app->post('/graines/', function (Request $request) use ($app){
+ $app->post('/graine/', function (Request $request) use ($app){
     $post = array(
         'latitude' => $request->request->get('latitude'),
         'longitude'  => $request->request->get('longitude'),
@@ -118,23 +129,45 @@ use Symfony\Component\HttpFoundation\Response;
         'parent'  => $request->request->get('parent'),
     );
     $sql = 'INSERT INTO "main"."GRAINE" ("latitude","longitude","nom","date","parent") VALUES
-    ('.$post[latitude].',"'.$post[longitude].'","'.$post[nom].'","'.$post[date].'","'.$post[parent].'")';
+    ('.$post['latitude'].','.$post['longitude'].','.$post['nom'].','.$post['date'].','.$post['parent'].')';
 
     $data = $app['db']->fetchAll($sql);
-    return Response('GRAINE sent', 201);
+    return json_encode('GRAINE sent', 201);
  });
 
- $app->post('/pollens/', function (Request $request) use ($app){
+ $app->post('/pollen/', function (Request $request) use ($app){
     $post = array(
         'user' => $request->request->get('user'),
         'latitude'  => $request->request->get('latitude'),
         'longitude'  => $request->request->get('longitude'),
     );
     $sql = 'INSERT INTO "main"."POLLEN" ("user","latitude","longitude") VALUES
-    ('.$post[user].',"'.$post[latitude].'","'.$post[longitude].'")';
+    ('.$post['user'].','.$post['latitude'].','.$post['longitude'].')';
 
     $data = $app['db']->fetchAll($sql);
-    return Response('POLLEN sent', 201);
+    return json_encode('POLLEN sent', 201);
+ });
+
+ //PUT -> UPDATE USER
+ $app->put('/users/id={id}', function (Request $request, $id) use ($app) {
+   $put = array(
+     'pseudo' => $request->request->get('pseudo'),
+     'date'  => $request->request->get('date'),
+     'email'  => $request->request->get('email'),
+     'parent'  => $request->request->get('parent'),
+     'mdp'  => $request->request->get('mdp'),
+   );
+
+   $sql = 'UPDATE USER SET pseudo="'
+   .$put['pseudo'].'" ,date="'
+   .$put['date'].'" ,email="'
+   .$put['email'].'" ,parent="'
+   .$put['parent'].'" ,mdp="'
+   .$put['mdp']
+   .'" WHERE rowid="'.$id.'"';
+
+   $data = $app['db']->fetchAll($sql);
+   return json_encode('USER update', 201);
  });
 
 

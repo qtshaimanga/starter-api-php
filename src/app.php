@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\Response;
       if($param == "all"){
         $param = "*";
       }
+      
       $sql = "SELECT rowid, $param FROM USER WHERE rowid=".$id;
       $user = $app['db']->fetchAll($sql);
       return  json_encode($user);

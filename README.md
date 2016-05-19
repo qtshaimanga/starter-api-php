@@ -47,5 +47,6 @@
   - /users/id={id}
     > update an user
 
+
 </br>
 ###### nb: /etc/php.ini -> timezone('UTC')

@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\Response;
       if($param == "all"){
         $param = "*";
       }
-      
+
       $sql = "SELECT rowid, $param FROM USER WHERE rowid=".$id;
       $user = $app['db']->fetchAll($sql);
       return  json_encode($user);
@@ -104,21 +104,36 @@ use Symfony\Component\HttpFoundation\Response;
       }
   });
 
+  //REGISTER OR LOGIN - YOLO system
   $app->post('/user/', function (Request $request) use ($app){
      $post = array(
          'pseudo' => $request->request->get('pseudo'),
-         'date'  => $request->request->get('date'),
          'email'  => $request->request->get('email'),
          'parent'  => $request->request->get('parent'),
          'mdp'  => $request->request->get('mdp'),
      );
-     $sql = 'INSERT INTO "main"."USER" ("pseudo","date","email","parent","mdp") VALUES
-     ("'.$post['pseudo'].'","'.$post['date'].'","'.$post['email'].'","'.$post['parent'].'","'.$post['mdp'].'")';
 
-     $data = $app['db']->fetchAll($sql);
-     $rowid = $app['db']->lastInsertId();
+     $sqlCheck = "SELECT rowid, * FROM USER WHERE email='".$post['email']."'";
+     $dataCheck = $app['db']->fetchAll($sqlCheck);
 
-     return new Response(json_encode('USER sent'), 200, ['Data' => $rowid]);
+     if($dataCheck != null){
+
+       if ($dataCheck[0]['mdp'] == crypt($post['mdp'], $dataCheck[0]['mdp'])) {
+         $rowid = $dataCheck[0]['rowid'];
+       }else{
+         $rowid = 0;
+       }
+
+     }elseif($dataCheck == null){
+
+       $mdpCrypted = crypt($post['mdp'], "symbiosis");
+       $sql = 'INSERT INTO "main"."USER" ("pseudo", "email","parent","mdp") VALUES
+       ("'.$post['pseudo'].'","'.$post['email'].'","'.$post['parent'].'","'.$mdpCrypted.'")';
+       $data = $app['db']->fetchAll($sql);
+       $rowid = $app['db']->lastInsertId();
+     }
+
+    return new Response(json_encode('USER sent'), 200, ['Data' => $rowid]);
   });
 
  $app->post('/graine/', function (Request $request) use ($app){

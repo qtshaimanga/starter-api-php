@@ -71,13 +71,12 @@ use Symfony\Component\HttpFoundation\Response;
  //Type of request: http://localhost:8080/graines/id=2
  $app->get('/graines/id={id}', function (Silex\Application $app, $id) use ($app) {
 
-   $sql = "SELECT USER.nom, GRAINE.nom,USER.rowid, GRAINE.rowid FROM USER JOIN GRAINE ON GRAINE.rowid=USER.parent
+   $sql = "SELECT DISTINCT GRAINE.nom, USER.pseudo,GRAINE.parent, USER.rowid FROM USER JOIN GRAINE ON GRAINE.rowid=USER.parent
    WHERE USER.parent=$id
-   UNION SELECT GRAINE.nom, USER.nom, GRAINE.rowid, USER.rowid FROM GRAINE JOIN USER ON GRAINE.parent=USER.rowid
-   WHERE GRAINE.parent=(SELECT GRAINE.parent FROM USER JOIN GRAINE ON GRAINE.rowid=USER.parent WHERE USER.parent=$id)";
+   UNION SELECT DISTINCT GRAINE.nom, USER.pseudo, GRAINE.rowid, USER.rowid FROM GRAINE JOIN USER ON GRAINE.parent=USER.rowid
+   WHERE GRAINE.parent=(SELECT DISTINCT GRAINE.parent FROM USER JOIN GRAINE ON GRAINE.rowid=USER.parent WHERE USER.parent=$id) GROUP BY USER.rowid";
 
    $parents = $app['db']->fetchAll($sql);
-   //PARENT = $parents[0] AND CHILS = $parent[n!=0]
    return json_encode($parents);
  });
 
@@ -86,10 +85,9 @@ use Symfony\Component\HttpFoundation\Response;
  //Type of request: http://localhost:8080/users/id=2
  $app->get('/users/parents/id={id}', function (Silex\Application $app, $id) use ($app) {
 
-   $sql = "SELECT USER.nom as 'User.nom', USER.rowid as 'User.rowid', GRAINE.nom, GRAINE.rowid FROM USER
-   INNER JOIN GRAINE ON (USER.parent=GRAINE.rowid)
-   WHERE USER.parent
-   IN (SELECT GRAINE.rowid FROM GRAINE WHERE GRAINE.parent=$id)";
+   $sql = "SELECT USER.pseudo as 'User.nom', USER.rowid as 'User.rowid', GRAINE.nom, GRAINE.rowid
+   FROM USER INNER JOIN GRAINE ON (USER.parent=GRAINE.rowid)
+   WHERE USER.parent IN (SELECT GRAINE.rowid FROM GRAINE WHERE GRAINE.parent=$id)";
 
    $colonies = $app['db']->fetchAll($sql);
    return json_encode($colonies);
@@ -114,7 +112,7 @@ use Symfony\Component\HttpFoundation\Response;
      );
 
      $sqlCheck = "SELECT rowid, * FROM USER WHERE email='".$post['email']."'";
-     $dataCheck = $app['db']->fetchAll($sqlCheck);
+     $dataChec = $app['db']->fetchAll($sqlCheck);
 
      if($dataCheck != null){
 
@@ -168,7 +166,6 @@ use Symfony\Component\HttpFoundation\Response;
  $app->put('/users/id={id}', function (Request $request, $id) use ($app) {
    $put = array(
      'pseudo' => $request->request->get('pseudo'),
-     'date'  => $request->request->get('date'),
      'email'  => $request->request->get('email'),
      'parent'  => $request->request->get('parent'),
      'mdp'  => $request->request->get('mdp'),
@@ -176,7 +173,6 @@ use Symfony\Component\HttpFoundation\Response;
 
    $sql = 'UPDATE USER SET pseudo="'
    .$put['pseudo'].'" ,date="'
-   .$put['date'].'" ,email="'
    .$put['email'].'" ,parent="'
    .$put['parent'].'" ,mdp="'
    .$put['mdp']

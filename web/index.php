@@ -9,11 +9,11 @@ if (php_sapi_name() === 'cli-server' && is_file($filename)) {
     return false;
 }
 
-$app = require __DIR__.'/../src/app.php';
-
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver'   => 'pdo_sqlite',
-        'path'     => __DIR__.'/../bdd/symbiosis.sqlite',
+        'path'     => __DIR__.'/../bdd/interaction.sqlite',
     ),
 ));
+
+$app = require __DIR__.'/../src/app.php';

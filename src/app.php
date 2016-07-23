@@ -4,13 +4,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Response;
 
-  //DATA
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT');
+header('content-type: application/json; charset=utf-8');
+
+  //DATA COMPOSITION
   $yolo = array(
-    "Symbiosis" => "Camille, Etienne, Victoire, Quentin",
+    "interaction1" => "yolo",
+    "interaction2" => "yoolo",
+    "interaction3" => "yolo",
+    "interaction4" => "yolo",
+    "interaction5" => "yolo",
+    "interaction6" => "yolo"
   );
 
- //GET ALL
-  $app->get('/', function() use ($yolo) {
+  //si pas du l'application alors pas de request et si pas logé pas post etc
+  /* GET */
+  $app->get('/api/', function() use ($yolo) {
     return json_encode($yolo);
   });
 
@@ -20,167 +31,86 @@ use Symfony\Component\HttpFoundation\Response;
       return  json_encode($users);
   });
 
-  $app->get('/graines/', function () use ($app) {
-     $sql = "SELECT rowid, * FROM GRAINE";
-     $graines = $app['db']->fetchAll($sql);
-     return  json_encode($graines);
-  });
-
-  $app->get('/pollens/', function () use ($app) {
-       $sql = "SELECT rowid, * FROM POLLEN";
-       $pollens = $app['db']->fetchAll($sql);
-       return  json_encode($pollens);
-  });
-
-  //RETURN USER
-  $app->get('/users/id={id}&param={param}', function ($id, $param) use ($app) {
-      if($param == "all"){
-        $param = "*";
-      }
-
-      $sql = "SELECT rowid, $param FROM USER WHERE rowid=".$id;
-      $user = $app['db']->fetchAll($sql);
-      return  json_encode($user);
-  });
-
- //RETURN DISTANCE
- //Type of request: http://localhost:8080/graines/latitude=408.6962578192132&longitude=-97.8127746582031&perimeter=375
- $app->get('/graines/latitude={latitude}&longitude={longitude}&perimeter={perimeter}', function (Silex\Application $app, $latitude, $longitude, $perimeter) use ($app) {
-    $sql = "SELECT rowid, * FROM GRAINE";
-    $graines = $app['db']->fetchAll($sql);
-
-    $distance = array();
-    foreach ($graines as $index => $graine) {
-      $latitudeRef = $graine['latitude'];
-      $longitudeRef = $graine['longitude'];
-      $calDistance = strval(abs(sqrt(pow($latitudeRef-$latitude, 2)+pow($longitudeRef-$longitude, 2))));
-
-      if($perimeter>$calDistance){
-        $distance[$graine['rowid']] = $calDistance;
-      }
-    }
-
-    if (!isset($graines)) {
-        $app->abort(404, "Parameter {$distance} is not valid.");
-    }
-    return json_encode([$distance]);
- });
-
-
- //RETURN CHILDS AND PARENT OF A SEED
- //Type of request: http://localhost:8080/graines/id=2
- $app->get('/graines/id={id}', function (Silex\Application $app, $id) use ($app) {
-
-   $sql = "SELECT DISTINCT GRAINE.nom, USER.pseudo,GRAINE.parent, USER.rowid FROM USER JOIN GRAINE ON GRAINE.rowid=USER.parent
-   WHERE USER.parent=$id
-   UNION SELECT DISTINCT GRAINE.nom, USER.pseudo, GRAINE.rowid, USER.rowid FROM GRAINE JOIN USER ON GRAINE.parent=USER.rowid
-   WHERE GRAINE.parent=(SELECT DISTINCT GRAINE.parent FROM USER JOIN GRAINE ON GRAINE.rowid=USER.parent WHERE USER.parent=$id) GROUP BY USER.rowid";
-
-   $parents = $app['db']->fetchAll($sql);
-   return json_encode($parents);
- });
-
-
- //RETURN ALL CHILDS FOR EACH COLONIES OF AN USER
- //Type of request: http://localhost:8080/users/id=2
- $app->get('/users/parents/id={id}', function (Silex\Application $app, $id) use ($app) {
-
-   $sql = "SELECT USER.pseudo as 'User.nom', USER.rowid as 'User.rowid', GRAINE.nom, GRAINE.rowid
-   FROM USER INNER JOIN GRAINE ON (USER.parent=GRAINE.rowid)
-   WHERE USER.parent IN (SELECT GRAINE.rowid FROM GRAINE WHERE GRAINE.parent=$id)";
-
-   $colonies = $app['db']->fetchAll($sql);
-   return json_encode($colonies);
- });
-
-
- //POST ALL
+  //POST ALL
   $app->before(function (Request $request) {
-      if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-          $data = json_decode($request->getContent(), true);
-          $request->request->replace(is_array($data) ? $data : array());
-      }
+    //if (0 === strpos($request->headers->get('Content-Type'), 'application/octet-stream')) {
+      // $data = json_decode($request->getContent(), true);
+      // $request->request->replace(is_array($data) ? $data : array());
+    //}
+    if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
+      $data = json_decode($request->getContent(), true);
+      $request->request->replace(is_array($data) ? $data : array());
+    }
   });
 
-  //REGISTER OR LOGIN - YOLO system
-  $app->post('/user/', function (Request $request) use ($app){
-     $post = array(
-         'pseudo' => $request->request->get('pseudo'),
-         'email'  => $request->request->get('email'),
-         'parent'  => $request->request->get('parent'),
-         'mdp'  => $request->request->get('mdp'),
-     );
+  ///upload/
+  $app->post('/upload', function (Request $request) use ($app){
 
-     $sqlCheck = "SELECT rowid, * FROM USER WHERE email='".$post['email']."'";
-     $dataChec = $app['db']->fetchAll($sqlCheck);
+    // var_dump("yolooo", $request->request);
+    //
+    // $ds          = DIRECTORY_SEPARATOR;
+    // $storeFolder = 'uploads';
+    // if (!empty($_FILES)) {
+    //     $tempFile = $_FILES['file']['tmp_name'];
+    //     $targetPath = dirname( __FILE__ ) . $ds. $storeFolder . $ds;
+    //     $targetFile =  $targetPath. $_FILES['file']['name'];
+    //     move_uploaded_file($tempFile,$targetFile);
+    // }
 
-     if($dataCheck != null){
+    //change name with id
+    // add info in BDD
+    //css transforme form in capture zone
+    // optimise image taille etc.
+    $file = $request->files->get('upload');
 
-       if ($dataCheck[0]['mdp'] == crypt($post['mdp'], $dataCheck[0]['mdp'])) {
-         $rowid = $dataCheck[0]['rowid'];
-       }else{
-         $rowid = 0;
-       }
+    if ($file == NULL){
+      $send = json_encode(array("status" => "Fail"));
 
-     }elseif($dataCheck == null){
+      return $app->json($send, 500);
 
-       $mdpCrypted = crypt($post['mdp'], "symbiosis");
-       $sql = 'INSERT INTO "main"."USER" ("pseudo", "email","parent","mdp") VALUES
-       ("'.$post['pseudo'].'","'.$post['email'].'","'.$post['parent'].'","'.$mdpCrypted.'")';
-       $data = $app['db']->fetchAll($sql);
-       $rowid = $app['db']->lastInsertId();
-     }
+    } else {
+      $file->move(__DIR__.'/../uploads',
+      $file->getClientOriginalName());
+      $send = json_encode(array("status" => "Ok"));
 
-    return new Response(json_encode('USER sent'), 200, ['Data' => $rowid]);
-  });
+      return $app->json($send, 200);
+    }
 
- $app->post('/graine/', function (Request $request) use ($app){
-    $post = array(
-        'latitude' => $request->request->get('latitude'),
-        'longitude'  => $request->request->get('longitude'),
-        'nom'  => $request->request->get('nom'),
-        'date'  => $request->request->get('date'),
-        'parent'  => $request->request->get('parent'),
-    );
-    $sql = 'INSERT INTO "main"."GRAINE" ("latitude","longitude","nom","date","parent") VALUES
-    ('.$post['latitude'].','.$post['longitude'].','.$post['nom'].','.$post['date'].','.$post['parent'].')';
+    // $files = $request->files->get($form->getName());
+    // /* Make sure that Upload Directory is properly configured and writable */
+    // $path = __DIR__.'/../upload/';
+    // $filename = $files['FileUpload']->getClientOriginalName();
+    // $files['FileUpload']->move($path,$filename);
+    // $message = 'File was successfully uploaded!';
 
-    $data = $app['db']->fetchAll($sql);
-    return json_encode('GRAINE sent', 201);
- });
+    return json_encode('GIF uploaded', 201);
+   });
 
- $app->post('/pollen/', function (Request $request) use ($app){
-    $post = array(
-        'user' => $request->request->get('user'),
-        'latitude'  => $request->request->get('latitude'),
-        'longitude'  => $request->request->get('longitude'),
-    );
-    $sql = 'INSERT INTO "main"."POLLEN" ("user","latitude","longitude") VALUES
-    ('.$post['user'].','.$post['latitude'].','.$post['longitude'].')';
+/* POST */
+/* PUT */
 
-    $data = $app['db']->fetchAll($sql);
-    return json_encode('POLLEN sent', 201);
- });
+/* uplaod
+if(isset($_FILES['chanson'])){
+                  $error = false;
+                  $extensions_valides = array( 'mp3','ogg' );
+                  //1. strrchr renvoie l'extension avec le point (« . »).
+                  //2. substr(chaine,1) ignore le premier caractère de chaine.
+                  //3. strtolower met l'extension en minuscules.
+                  $extension_upload = strtolower(  substr(  strrchr($_FILES['chanson']['name'], '.')  ,1)  );
+                   if ( !in_array($extension_upload,$extensions_valides) ){
+                          $error="Extension non valide".$extension_upload;
+                      echo "error : $error";}
+                      if($error==false && $_FILES['chanson']['error']==0 ){
+                             $fichier = "./uploads/".uniqid().".$extension_upload";
+                             if(move_uploaded_file( //voir copy()
+                                  $_FILES['chanson']['tmp_name'], $fichier)){
+                                 $c = new Chanson($_POST['nom'], "",$fichier,date("Y-m-d h:i:s"),$_POST['style'], $_SESSION['id']);
+                                 $c->save();
+                                 //header("location:".URL);
+                                 header("Location:".$_SERVER['HTTP_REFERER']);
+                             }
+                  }
 
- //PUT -> UPDATE USER
- $app->put('/users/id={id}', function (Request $request, $id) use ($app) {
-   $put = array(
-     'pseudo' => $request->request->get('pseudo'),
-     'email'  => $request->request->get('email'),
-     'parent'  => $request->request->get('parent'),
-     'mdp'  => $request->request->get('mdp'),
-   );
+*/
 
-   $sql = 'UPDATE USER SET pseudo="'
-   .$put['pseudo'].'" ,date="'
-   .$put['email'].'" ,parent="'
-   .$put['parent'].'" ,mdp="'
-   .$put['mdp']
-   .'" WHERE rowid="'.$id.'"';
-
-   $data = $app['db']->fetchAll($sql);
-   return json_encode('USER update', 201);
- });
-
-
- $app->run();
+  $app->run();

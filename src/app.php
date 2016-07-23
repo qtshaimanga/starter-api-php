@@ -61,6 +61,7 @@ header('content-type: application/json; charset=utf-8');
     // add info in BDD
     //css transforme form in capture zone
     // optimise image taille etc.
+    //change the upload_max_filesize post_max_size -> /etc/php5/cli/conf.d/php.ini
     $file = $request->files->get('upload');
 
     if ($file == NULL){

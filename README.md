@@ -3,4 +3,4 @@
     - composer install
 
 #### Run serve
-    - php -S localhost:8080 -t serve serve/index.php
+    - php -S localhost:8000 -t serve serve/index.php

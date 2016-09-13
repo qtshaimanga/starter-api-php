@@ -1,8 +1,8 @@
 # config valid only for current version of Capistrano
 lock '3.6.1'
 
-set :application, 'API starter'
-set :repo_url, 'https://github.com/qtshaimanga/starter-api-php.git'
+set :application, 'api-starter'
+set :repo_url, 'https://github.com/airEDF/starter-api-secure-php.git'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -24,10 +24,10 @@ set :repo_url, 'https://github.com/qtshaimanga/starter-api-php.git'
 # set :pty, true
 
 # Default value for :linked_files is []
-# append :linked_files, 'config/database.yml', 'config/secrets.yml'
+# append :linked_files, 'bdd/interaction.sqlite'
 
 # Default value for linked_dirs is []
-# append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system'
+# append :linked_dirs, 'tmp'
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }

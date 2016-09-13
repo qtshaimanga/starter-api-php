@@ -1,0 +1,102 @@
+# Logfile created on 2016-09-13 16:55:32 +0200 by logger.rb/41954
+  INFO ---------------------------------------------------------------------------
+  INFO START 2016-09-13 16:55:32 +0200 cap production deploy
+  INFO ---------------------------------------------------------------------------
+  INFO [80518fa9] Running /usr/bin/env mkdir -p /tmp as deploy@151.80.58.17
+ DEBUG [80518fa9] Command: /usr/bin/env mkdir -p /tmp
+  INFO [6741f260] Running /usr/bin/env #<StringIO:0x007fa28a0343a8> /tmp/git-ssh-API_starter-production-root.sh as deploy@151.80.58.17
+ DEBUG [6741f260] Command: /usr/bin/env #<StringIO:0x007fa28a0343a8> /tmp/git-ssh-API_starter-production-root.sh
+  INFO [89b4782a] Running /usr/bin/env chmod 700 /tmp/git-ssh-API_starter-production-root.sh as deploy@151.80.58.17
+ DEBUG [89b4782a] Command: /usr/bin/env chmod 700 /tmp/git-ssh-API_starter-production-root.sh
+  INFO [28743e77] Running /usr/bin/env git ls-remote --heads https://github.com/qtshaimanga/starter-api-php.git as deploy@151.80.58.17
+ DEBUG [28743e77] Command: ( export GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-API_starter-production-root.sh" ; /usr/bin/env git ls-remote --heads https://github.com/qtshaimanga/starter-api-php.git )
+  INFO [4fbc0904] Running /usr/bin/env mkdir -p /var/www/API_starter/shared /var/www/API_starter/releases as deploy@151.80.58.17
+ DEBUG [4fbc0904] Command: /usr/bin/env mkdir -p /var/www/API_starter/shared /var/www/API_starter/releases
+ DEBUG [aa1fd31a] Running [ -f /var/www/API_starter/current/REVISION ] as deploy@151.80.58.17
+ DEBUG [aa1fd31a] Command: [ -f /var/www/API_starter/current/REVISION ]
+ DEBUG [d6d88956] Running /usr/bin/env cat /var/www/API_starter/current/REVISION 2>/dev/null as deploy@151.80.58.17
+ DEBUG [d6d88956] Command: /usr/bin/env cat /var/www/API_starter/current/REVISION 2>/dev/null
+ DEBUG [c2d8d39a] Running [ -f /var/www/API_starter/repo/HEAD ] as deploy@151.80.58.17
+ DEBUG [c2d8d39a] Command: [ -f /var/www/API_starter/repo/HEAD ]
+  INFO The repository mirror is at /var/www/API_starter/repo
+ DEBUG [008b48eb] Running if test ! -d /var/www/API_starter/repo; then echo "Directory does not exist '/var/www/API_starter/repo'" 1>&2; false; fi as deploy@151.80.58.17
+ DEBUG [008b48eb] Command: if test ! -d /var/www/API_starter/repo; then echo "Directory does not exist '/var/www/API_starter/repo'" 1>&2; false; fi
+  INFO [f2cc4786] Running /usr/bin/env git remote update --prune as deploy@151.80.58.17
+ DEBUG [f2cc4786] Command: cd /var/www/API_starter/repo && ( export GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-API_starter-production-root.sh" ; /usr/bin/env git remote update --prune )
+ DEBUG [bdb7706d] Running if test ! -d /var/www/API_starter/repo; then echo "Directory does not exist '/var/www/API_starter/repo'" 1>&2; false; fi as deploy@151.80.58.17
+ DEBUG [bdb7706d] Command: if test ! -d /var/www/API_starter/repo; then echo "Directory does not exist '/var/www/API_starter/repo'" 1>&2; false; fi
+  INFO [09a697ce] Running /usr/bin/env mkdir -p /var/www/API_starter/releases/20160913145532 as deploy@151.80.58.17
+ DEBUG [09a697ce] Command: cd /var/www/API_starter/repo && ( export GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-API_starter-production-root.sh" ; /usr/bin/env mkdir -p /var/www/API_starter/releases/20160913145532 )
+  INFO [d8cefc9f] Running /usr/bin/env git archive master | tar -x -f - -C /var/www/API_starter/releases/20160913145532 as deploy@151.80.58.17
+ DEBUG [d8cefc9f] Command: cd /var/www/API_starter/repo && ( export GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-API_starter-production-root.sh" ; /usr/bin/env git archive master | tar -x -f - -C /var/www/API_starter/releases/20160913145532 )
+ DEBUG [6d1b65af] Running if test ! -d /var/www/API_starter/repo; then echo "Directory does not exist '/var/www/API_starter/repo'" 1>&2; false; fi as deploy@151.80.58.17
+ DEBUG [6d1b65af] Command: if test ! -d /var/www/API_starter/repo; then echo "Directory does not exist '/var/www/API_starter/repo'" 1>&2; false; fi
+ DEBUG [f308dfdc] Running /usr/bin/env git rev-list --max-count=1 master as deploy@151.80.58.17
+ DEBUG [f308dfdc] Command: cd /var/www/API_starter/repo && ( export GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-API_starter-production-root.sh" ; /usr/bin/env git rev-list --max-count=1 master )
+ DEBUG [b87ac0ed] Running if test ! -d /var/www/API_starter/releases/20160913145532; then echo "Directory does not exist '/var/www/API_starter/releases/20160913145532'" 1>&2; false; fi as deploy@151.80.58.17
+ DEBUG [b87ac0ed] Command: if test ! -d /var/www/API_starter/releases/20160913145532; then echo "Directory does not exist '/var/www/API_starter/releases/20160913145532'" 1>&2; false; fi
+  INFO [1fa3d8a5] Running /usr/bin/env echo "" >> REVISION as deploy@151.80.58.17
+ DEBUG [1fa3d8a5] Command: cd /var/www/API_starter/releases/20160913145532 && /usr/bin/env echo "" >> REVISION
+  INFO [baab60db] Running /usr/bin/env ln -s /var/www/API_starter/releases/20160913145532 /var/www/API_starter/releases/current as deploy@151.80.58.17
+ DEBUG [baab60db] Command: /usr/bin/env ln -s /var/www/API_starter/releases/20160913145532 /var/www/API_starter/releases/current
+  INFO [d6effad1] Running /usr/bin/env mv /var/www/API_starter/releases/current /var/www/API_starter as deploy@151.80.58.17
+ DEBUG [d6effad1] Command: /usr/bin/env mv /var/www/API_starter/releases/current /var/www/API_starter
+ DEBUG [90febb6d] Running /usr/bin/env ls -xtr /var/www/API_starter/releases as deploy@151.80.58.17
+ DEBUG [90febb6d] Command: /usr/bin/env ls -xtr /var/www/API_starter/releases
+ DEBUG [3a0d04ab] Running if test ! -d /var/www/API_starter/releases; then echo "Directory does not exist '/var/www/API_starter/releases'" 1>&2; false; fi as deploy@151.80.58.17
+ DEBUG [3a0d04ab] Command: if test ! -d /var/www/API_starter/releases; then echo "Directory does not exist '/var/www/API_starter/releases'" 1>&2; false; fi
+  INFO [bd84780a] Running /usr/bin/env echo "Branch master (at ) deployed as release 20160913145532 by root" >> /var/www/API_starter/revisions.log as deploy@151.80.58.17
+ DEBUG [bd84780a] Command: cd /var/www/API_starter/releases && /usr/bin/env echo "Branch master (at ) deployed as release 20160913145532 by root" >> /var/www/API_starter/revisions.log
+  INFO ---------------------------------------------------------------------------
+  INFO START 2016-09-13 17:42:01 +0200 cap production deploy
+  INFO ---------------------------------------------------------------------------
+  INFO [d180bc83] Running /usr/bin/env mkdir -p /tmp as deploy@151.80.58.17
+ DEBUG [d180bc83] Command: /usr/bin/env mkdir -p /tmp
+  INFO ---------------------------------------------------------------------------
+  INFO START 2016-09-13 19:38:41 +0200 cap production deploy
+  INFO ---------------------------------------------------------------------------
+  INFO [c486522d] Running /usr/bin/env mkdir -p /tmp as deploy@151.80.58.17
+ DEBUG [c486522d] Command: /usr/bin/env mkdir -p /tmp
+  INFO [e19d0898] Running /usr/bin/env #<StringIO:0x007fbb948347b0> /tmp/git-ssh-api-starter-production-root.sh as deploy@151.80.58.17
+ DEBUG [e19d0898] Command: /usr/bin/env #<StringIO:0x007fbb948347b0> /tmp/git-ssh-api-starter-production-root.sh
+  INFO [e70f1d0d] Running /usr/bin/env chmod 700 /tmp/git-ssh-api-starter-production-root.sh as deploy@151.80.58.17
+ DEBUG [e70f1d0d] Command: /usr/bin/env chmod 700 /tmp/git-ssh-api-starter-production-root.sh
+  INFO [cdc4f4bb] Running /usr/bin/env git ls-remote --heads https://github.com/airEDF/starter-api-secure-php.git as deploy@151.80.58.17
+ DEBUG [cdc4f4bb] Command: ( export GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-api-starter-production-root.sh" ; /usr/bin/env git ls-remote --heads https://github.com/airEDF/starter-api-secure-php.git )
+  INFO [f2f30f93] Running /usr/bin/env mkdir -p /var/www/api-starter/shared /var/www/api-starter/releases as deploy@151.80.58.17
+ DEBUG [f2f30f93] Command: /usr/bin/env mkdir -p /var/www/api-starter/shared /var/www/api-starter/releases
+ DEBUG [770651fb] Running [ -f /var/www/api-starter/current/REVISION ] as deploy@151.80.58.17
+ DEBUG [770651fb] Command: [ -f /var/www/api-starter/current/REVISION ]
+ DEBUG [7e4d9fdf] Running /usr/bin/env cat /var/www/api-starter/current/REVISION 2>/dev/null as deploy@151.80.58.17
+ DEBUG [7e4d9fdf] Command: /usr/bin/env cat /var/www/api-starter/current/REVISION 2>/dev/null
+ DEBUG [576dbc7f] Running [ -f /var/www/api-starter/repo/HEAD ] as deploy@151.80.58.17
+ DEBUG [576dbc7f] Command: [ -f /var/www/api-starter/repo/HEAD ]
+  INFO The repository mirror is at /var/www/api-starter/repo
+ DEBUG [0af40957] Running if test ! -d /var/www/api-starter/repo; then echo "Directory does not exist '/var/www/api-starter/repo'" 1>&2; false; fi as deploy@151.80.58.17
+ DEBUG [0af40957] Command: if test ! -d /var/www/api-starter/repo; then echo "Directory does not exist '/var/www/api-starter/repo'" 1>&2; false; fi
+  INFO [9619f043] Running /usr/bin/env git remote update --prune as deploy@151.80.58.17
+ DEBUG [9619f043] Command: cd /var/www/api-starter/repo && ( export GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-api-starter-production-root.sh" ; /usr/bin/env git remote update --prune )
+ DEBUG [b22fe1e8] Running if test ! -d /var/www/api-starter/repo; then echo "Directory does not exist '/var/www/api-starter/repo'" 1>&2; false; fi as deploy@151.80.58.17
+ DEBUG [b22fe1e8] Command: if test ! -d /var/www/api-starter/repo; then echo "Directory does not exist '/var/www/api-starter/repo'" 1>&2; false; fi
+  INFO [602129bd] Running /usr/bin/env mkdir -p /var/www/api-starter/releases/20160913173841 as deploy@151.80.58.17
+ DEBUG [602129bd] Command: cd /var/www/api-starter/repo && ( export GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-api-starter-production-root.sh" ; /usr/bin/env mkdir -p /var/www/api-starter/releases/20160913173841 )
+  INFO [00a35eaa] Running /usr/bin/env git archive master | tar -x -f - -C /var/www/api-starter/releases/20160913173841 as deploy@151.80.58.17
+ DEBUG [00a35eaa] Command: cd /var/www/api-starter/repo && ( export GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-api-starter-production-root.sh" ; /usr/bin/env git archive master | tar -x -f - -C /var/www/api-starter/releases/20160913173841 )
+ DEBUG [0b529e26] Running if test ! -d /var/www/api-starter/repo; then echo "Directory does not exist '/var/www/api-starter/repo'" 1>&2; false; fi as deploy@151.80.58.17
+ DEBUG [0b529e26] Command: if test ! -d /var/www/api-starter/repo; then echo "Directory does not exist '/var/www/api-starter/repo'" 1>&2; false; fi
+ DEBUG [eb8df938] Running /usr/bin/env git rev-list --max-count=1 master as deploy@151.80.58.17
+ DEBUG [eb8df938] Command: cd /var/www/api-starter/repo && ( export GIT_ASKPASS="/bin/echo" GIT_SSH="/tmp/git-ssh-api-starter-production-root.sh" ; /usr/bin/env git rev-list --max-count=1 master )
+ DEBUG [84afa152] Running if test ! -d /var/www/api-starter/releases/20160913173841; then echo "Directory does not exist '/var/www/api-starter/releases/20160913173841'" 1>&2; false; fi as deploy@151.80.58.17
+ DEBUG [84afa152] Command: if test ! -d /var/www/api-starter/releases/20160913173841; then echo "Directory does not exist '/var/www/api-starter/releases/20160913173841'" 1>&2; false; fi
+  INFO [bc4819be] Running /usr/bin/env echo "" >> REVISION as deploy@151.80.58.17
+ DEBUG [bc4819be] Command: cd /var/www/api-starter/releases/20160913173841 && /usr/bin/env echo "" >> REVISION
+  INFO [e126959d] Running /usr/bin/env ln -s /var/www/api-starter/releases/20160913173841 /var/www/api-starter/releases/current as deploy@151.80.58.17
+ DEBUG [e126959d] Command: /usr/bin/env ln -s /var/www/api-starter/releases/20160913173841 /var/www/api-starter/releases/current
+  INFO [c3768f36] Running /usr/bin/env mv /var/www/api-starter/releases/current /var/www/api-starter as deploy@151.80.58.17
+ DEBUG [c3768f36] Command: /usr/bin/env mv /var/www/api-starter/releases/current /var/www/api-starter
+ DEBUG [d8b54158] Running /usr/bin/env ls -xtr /var/www/api-starter/releases as deploy@151.80.58.17
+ DEBUG [d8b54158] Command: /usr/bin/env ls -xtr /var/www/api-starter/releases
+ DEBUG [0266c6e0] Running if test ! -d /var/www/api-starter/releases; then echo "Directory does not exist '/var/www/api-starter/releases'" 1>&2; false; fi as deploy@151.80.58.17
+ DEBUG [0266c6e0] Command: if test ! -d /var/www/api-starter/releases; then echo "Directory does not exist '/var/www/api-starter/releases'" 1>&2; false; fi
+  INFO [9a291de8] Running /usr/bin/env echo "Branch master (at ) deployed as release 20160913173841 by root" >> /var/www/api-starter/revisions.log as deploy@151.80.58.17
+ DEBUG [9a291de8] Command: cd /var/www/api-starter/releases && /usr/bin/env echo "Branch master (at ) deployed as release 20160913173841 by root" >> /var/www/api-starter/revisions.log

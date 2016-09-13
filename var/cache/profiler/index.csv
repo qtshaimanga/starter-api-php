@@ -35,3 +35,17 @@ bfe6e6,::1,GET,http://localhost:8000/api,1473500798,,302
 e24e7a,::1,POST,http://localhost:8000/login_check,1473623049,,302
 d1225e,::1,GET,http://localhost:8000/api,1473623049,,200
 541eb4,::1,GET,http://localhost:8000/api,1473623053,,200
+47d89d,127.0.0.1,GET,http://localhost:8000/,1473789440,,404
+7bcdc3,127.0.0.1,GET,http://localhost:8000/images/404-ghost.png,1473789440,,404
+a757bb,127.0.0.1,GET,http://localhost:8000/apoi,1473789460,,404
+eb440b,127.0.0.1,GET,http://localhost:8000/images/404-ghost.png,1473789460,,404
+ecadd0,127.0.0.1,GET,http://localhost:8000/api,1473789514,,200
+640e00,127.0.0.1,GET,http://localhost:8000/,1473789518,,404
+aed71e,127.0.0.1,GET,http://localhost:8000/images/404-ghost.png,1473789520,,404
+61a5bd,127.0.0.1,GET,http://localhost:8000/api,1473789695,,200
+41b2db,127.0.0.1,GET,http://localhost:8000/api,1473789901,,200
+82496d,127.0.0.1,GET,http://localhost:8000/api,1473789939,,302
+efc156,127.0.0.1,GET,http://localhost:8000/login,1473789939,,200
+c3d7ac,127.0.0.1,POST,http://localhost:8000/login_check,1473789944,,302
+d63aa0,127.0.0.1,GET,http://localhost:8000/api,1473789944,,200
+a0286e,127.0.0.1,GET,http://localhost:8000/api,1473790003,,200

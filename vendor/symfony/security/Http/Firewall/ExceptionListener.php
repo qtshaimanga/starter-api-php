@@ -22,7 +22,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\InsufficientAuthenticationException;
 use Symfony\Component\Security\Core\Exception\LogoutException;
-use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
@@ -40,8 +39,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class ExceptionListener
 {
-    use TargetPathTrait;
-
     private $tokenStorage;
     private $providerKey;
     private $accessDeniedHandler;
@@ -203,15 +200,7 @@ class ExceptionListener
             }
         }
 
-        $response = $this->authenticationEntryPoint->start($request, $authException);
-
-        if (!$response instanceof Response) {
-            $given = is_object($response) ? get_class($response) : gettype($response);
-
-            throw new \LogicException(sprintf('The %s::start() method must return a Response object (%s returned)', get_class($this->authenticationEntryPoint), $given));
-        }
-
-        return $response;
+        return $this->authenticationEntryPoint->start($request, $authException);
     }
 
     /**
@@ -221,7 +210,7 @@ class ExceptionListener
     {
         // session isn't required when using HTTP basic authentication mechanism for example
         if ($request->hasSession() && $request->isMethodSafe() && !$request->isXmlHttpRequest()) {
-            $this->saveTargetPath($request->getSession(), $this->providerKey, $request->getUri());
+            $request->getSession()->set('_security.'.$this->providerKey.'.target_path', $request->getUri());
         }
     }
 }

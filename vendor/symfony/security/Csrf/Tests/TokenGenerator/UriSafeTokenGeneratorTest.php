@@ -28,6 +28,11 @@ class UriSafeTokenGeneratorTest extends \PHPUnit_Framework_TestCase
     private static $bytes;
 
     /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $random;
+
+    /**
      * @var UriSafeTokenGenerator
      */
     private $generator;
@@ -39,16 +44,23 @@ class UriSafeTokenGeneratorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->generator = new UriSafeTokenGenerator(self::ENTROPY);
+        $this->random = $this->getMock('Symfony\Component\Security\Core\Util\SecureRandomInterface');
+        $this->generator = new UriSafeTokenGenerator($this->random, self::ENTROPY);
     }
 
     protected function tearDown()
     {
+        $this->random = null;
         $this->generator = null;
     }
 
     public function testGenerateToken()
     {
+        $this->random->expects($this->once())
+            ->method('nextBytes')
+            ->with(self::ENTROPY / 8)
+            ->will($this->returnValue(self::$bytes));
+
         $token = $this->generator->generateToken();
 
         $this->assertTrue(ctype_print($token), 'is printable');

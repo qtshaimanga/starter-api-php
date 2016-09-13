@@ -17,7 +17,10 @@ final class SecurityEvents
      * The INTERACTIVE_LOGIN event occurs after a user is logged in
      * interactively for authentication based on http, cookies or X509.
      *
-     * @Event("Symfony\Component\Security\Http\Event\InteractiveLoginEvent")
+     * The event listener method receives a
+     * Symfony\Component\Security\Http\Event\InteractiveLoginEvent instance.
+     *
+     * @Event
      *
      * @var string
      */
@@ -27,7 +30,10 @@ final class SecurityEvents
      * The SWITCH_USER event occurs before switch to another user and
      * before exit from an already switched user.
      *
-     * @Event("Symfony\Component\Security\Http\Event\SwitchUserEvent")
+     * The event listener method receives a
+     * Symfony\Component\Security\Http\Event\SwitchUserEvent instance.
+     *
+     * @Event
      *
      * @var string
      */

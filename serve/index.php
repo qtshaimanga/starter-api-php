@@ -1,9 +1,16 @@
 <?php
 
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
+header('Access-Control-Allow-Origin: http://localhost:8080');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: GET, POST, PUT');
+header('content-type: application/json; charset=utf-8');
+
 require_once __DIR__.'/../vendor/autoload.php';
 
 $app = new Silex\Application();
 $app['debug'] = true;
+$app['monolog.level'] = 'INFO';
 
 $filename = __DIR__.preg_replace('#(\?.*)$#', '', $_SERVER['REQUEST_URI']);
 if (php_sapi_name() === 'cli-server' && is_file($filename)) {
@@ -17,4 +24,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     ),
 ));
 
-$app = require __DIR__.'/../src/app.php';
+require __DIR__.'/../app/app.php';
+require __DIR__.'/../app/routes.php';
+
+$app->run();

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Security\Http\Logout;
 
+use Symfony\Component\Form\Extension\Csrf\CsrfProvider\CsrfProviderAdapter;
+use Symfony\Component\Form\Extension\Csrf\CsrfProvider\CsrfProviderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -45,8 +47,14 @@ class LogoutUrlGenerator
      * @param string                    $csrfParameter    The CSRF token parameter name
      * @param CsrfTokenManagerInterface $csrfTokenManager A CsrfTokenManagerInterface instance
      */
-    public function registerListener($key, $logoutPath, $csrfTokenId, $csrfParameter, CsrfTokenManagerInterface $csrfTokenManager = null)
+    public function registerListener($key, $logoutPath, $csrfTokenId, $csrfParameter, $csrfTokenManager = null)
     {
+        if ($csrfTokenManager instanceof CsrfProviderInterface) {
+            $csrfTokenManager = new CsrfProviderAdapter($csrfTokenManager);
+        } elseif (null !== $csrfTokenManager && !$csrfTokenManager instanceof CsrfTokenManagerInterface) {
+            throw new \InvalidArgumentException('The CSRF token manager should be an instance of CsrfProviderInterface or CsrfTokenManagerInterface.');
+        }
+
         $this->listeners[$key] = array($logoutPath, $csrfTokenId, $csrfParameter, $csrfTokenManager);
     }
 
@@ -78,7 +86,7 @@ class LogoutUrlGenerator
      * Generates the logout URL for the firewall.
      *
      * @param string|null $key           The firewall key or null to use the current firewall key
-     * @param int         $referenceType The type of reference (one of the constants in UrlGeneratorInterface)
+     * @param bool|string $referenceType The type of reference (one of the constants in UrlGeneratorInterface)
      *
      * @return string The logout URL
      *

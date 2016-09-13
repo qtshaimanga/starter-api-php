@@ -213,7 +213,7 @@ class LogoutListenerTest extends \PHPUnit_Framework_TestCase
             $successHandler ?: $this->getSuccessHandler(),
             $options = array(
                 'csrf_parameter' => '_csrf_token',
-                'csrf_token_id' => 'logout',
+                'intention' => 'logout',
                 'logout_path' => '/logout',
                 'target_url' => '/',
             ),

@@ -24,15 +24,15 @@ use Psr\Log\LoggerInterface;
  */
 class DigestAuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
-    private $secret;
+    private $key;
     private $realmName;
     private $nonceValiditySeconds;
     private $logger;
 
-    public function __construct($realmName, $secret, $nonceValiditySeconds = 300, LoggerInterface $logger = null)
+    public function __construct($realmName, $key, $nonceValiditySeconds = 300, LoggerInterface $logger = null)
     {
         $this->realmName = $realmName;
-        $this->secret = $secret;
+        $this->key = $key;
         $this->nonceValiditySeconds = $nonceValiditySeconds;
         $this->logger = $logger;
     }
@@ -43,7 +43,7 @@ class DigestAuthenticationEntryPoint implements AuthenticationEntryPointInterfac
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $expiryTime = microtime(true) + $this->nonceValiditySeconds * 1000;
-        $signatureValue = md5($expiryTime.':'.$this->secret);
+        $signatureValue = md5($expiryTime.':'.$this->key);
         $nonceValue = $expiryTime.':'.$signatureValue;
         $nonceValueBase64 = base64_encode($nonceValue);
 
@@ -67,9 +67,9 @@ class DigestAuthenticationEntryPoint implements AuthenticationEntryPointInterfac
     /**
      * @return string
      */
-    public function getSecret()
+    public function getKey()
     {
-        return $this->secret;
+        return $this->key;
     }
 
     /**

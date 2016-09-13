@@ -1,4 +1,7 @@
-# Interaction.io API with SILEX
+# API with SILEX
+
+## USE Doctrine, Sqlite, Security Service Provider, Capistrano...
+
 ## Install
     - composer install
 

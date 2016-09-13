@@ -13,9 +13,7 @@ namespace Symfony\Component\Security\Http\Authentication;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Security\Http\HttpUtils;
-use Symfony\Component\Security\Http\ParameterBagUtils;
 
 /**
  * Class with the default authentication success handling logic.
@@ -26,8 +24,6 @@ use Symfony\Component\Security\Http\ParameterBagUtils;
  */
 class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
-    use TargetPathTrait;
-
     protected $httpUtils;
     protected $options;
     protected $providerKey;
@@ -112,12 +108,12 @@ class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandle
             return $this->options['default_target_path'];
         }
 
-        if ($targetUrl = ParameterBagUtils::getRequestParameterValue($request, $this->options['target_path_parameter'])) {
+        if ($targetUrl = $request->get($this->options['target_path_parameter'], null, true)) {
             return $targetUrl;
         }
 
-        if (null !== $this->providerKey && $targetUrl = $this->getTargetPath($request->getSession(), $this->providerKey)) {
-            $this->removeTargetPath($request->getSession(), $this->providerKey);
+        if (null !== $this->providerKey && $targetUrl = $request->getSession()->get('_security.'.$this->providerKey.'.target_path')) {
+            $request->getSession()->remove('_security.'.$this->providerKey.'.target_path');
 
             return $targetUrl;
         }

@@ -28,7 +28,7 @@ class AnonymousTokenTest extends \PHPUnit_Framework_TestCase
     public function testGetKey()
     {
         $token = new AnonymousToken('foo', 'bar');
-        $this->assertEquals('foo', $token->getSecret());
+        $this->assertEquals('foo', $token->getKey());
     }
 
     public function testGetCredentials()

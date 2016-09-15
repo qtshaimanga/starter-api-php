@@ -1,0 +1,17 @@
+# SYSTEM
+.DS_Store
+
+# SILEX
+/vendor/
+/var/cache/*
+/var/logs/*
+
+#API
+/tmp/sessions/*
+/uploads/*
+
+# BDD
+/bdd/interaction.sqlite
+
+# CAP
+/log/capistrano.log

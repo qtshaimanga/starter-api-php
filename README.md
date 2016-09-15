@@ -1,6 +1,7 @@
 # API with SILEX
 
 ## USE Doctrine, Sqlite, Security Service Provider, Capistrano...
+##### by q.tshaimanga@gmail.com
 
 ## Install
     - composer install

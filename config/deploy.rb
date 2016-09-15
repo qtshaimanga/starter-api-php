@@ -1,8 +1,11 @@
 # config valid only for current version of Capistrano
 lock '3.6.1'
 
-set :application, 'api-starter'
-set :repo_url, 'https://github.com/airEDF/starter-api-secure-php.git'
+set :application, 'starterApiSecure'
+
+set :repo_url, 'git@github.com:airEDF/starter-api-secure-php.git'
+set :git_https_username, 'air-edf'
+set :ssh_options, {:forward_agent => true, :keys => ['~/.ssh/id_rsa.pub']}
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -24,13 +27,26 @@ set :repo_url, 'https://github.com/airEDF/starter-api-secure-php.git'
 # set :pty, true
 
 # Default value for :linked_files is []
-# append :linked_files, 'bdd/interaction.sqlite'
+set :linked_files, fetch(:linked_files, []).push('bdd/interaction.sqlite')
 
 # Default value for linked_dirs is []
-# append :linked_dirs, 'tmp'
+set :linked_dirs, fetch(:linked_dirs, []).push('tmp/sessions', 'uploads')
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
+
+namespace :deploy do
+
+  after :updated, :composer do
+    on roles(:web), in: :groups, limit: 3, wait: 10 do
+      # Here we can do anything such as:
+      # within release_path do
+      #   execute :rake, 'cache:clear'
+      # end
+    end
+  end
+
+end

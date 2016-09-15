@@ -3,8 +3,13 @@
 ## USE Doctrine, Sqlite, Security Service Provider, Capistrano...
 ##### by q.tshaimanga@gmail.com
 
-## Install
-    - composer install
+## Install localy
+  - curl -s http://getcomposer.org/installer | php
+  - mv composer.phar /usr/local/bin/composer
+  - composer install
 
-#### Run serve
-    - php -S localhost:8000 -t serve serve/index.php
+#### Run dev serve
+  - php -S localhost:8000 -t serve serve/index.php
+
+#### Prod
+  - sudo cap production deploy

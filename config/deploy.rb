@@ -30,7 +30,7 @@ set :ssh_options, {:forward_agent => true, :keys => ['~/.ssh/id_rsa.pub']}
 set :linked_files, fetch(:linked_files, []).push('bdd/interaction.sqlite')
 
 # Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push('tmp/sessions', 'uploads', 'var/cache')
+set :linked_dirs, fetch(:linked_dirs, []).push('tmp/sessions', 'uploads', 'var/cache', 'var/logs')
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -42,9 +42,9 @@ namespace :deploy do
 
   after :updated, :silex_update do
     #invoke "silex:composer"
-    #invoke "silex:premissions"
+    invoke "silex:premissions"
   end
 
-  #after :finished, "silex:restart_apache"
+  after :finished, "silex:restart_apache"
 
 end

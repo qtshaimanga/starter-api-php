@@ -41,7 +41,7 @@ set :keep_releases, 3
 namespace :deploy do
 
   after :updated, :silex_update do
-    #invoke "silex:composer"
+    invoke "silex:composer"
     invoke "silex:premissions"
   end
 

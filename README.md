@@ -12,4 +12,5 @@
   - php -S localhost:8000 -t serve serve/index.php
 
 #### Prod
-  - sudo cap production deploy
+  - cap production deploy
+  - cap production apache:conf

@@ -3,7 +3,7 @@ ServerAdmin  <%= fetch(:server_admin) %>
 ServerName <%= fetch(:server_name) %>
 ServerAlias www.<%= fetch(:server_name) %>
 DocumentRoot <%= current_path %>
-<Directory  var/www/ >
+<Directory  <%= current_path %> >
 #AllowOverride none
 AllowOverride All
 </Directory>

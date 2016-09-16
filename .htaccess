@@ -3,4 +3,8 @@
     #RewriteEngine On
     #RewriteCond %{REQUEST_FILENAME} !-f
     #RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]
+
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L,QSA]
 </IfModule>

@@ -4,7 +4,8 @@ ServerName <%= fetch(:server_name) %>
 ServerAlias www.<%= fetch(:server_name) %>
 DocumentRoot <%= current_path %>
 <Directory  <%= current_path %>>
-AllowOverride All
+AllowOverride none
+#AllowOverride All
 </Directory>
 ErrorLog /var/www/watch/logs/error.log
 CustomLog /var/www/watch/logs/access.log combined

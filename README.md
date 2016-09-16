@@ -10,6 +10,7 @@
 
 #### Run dev serve
   - php -S localhost:8000 -t serve serve/index.php
+  - php -S localhost:8000 -t serve index.php
 
 #### Prod
   - cap production deploy

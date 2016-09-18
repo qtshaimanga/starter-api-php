@@ -3,15 +3,14 @@
 
 # SILEX
 /vendor/
-/var/cache/*
-/var/logs/*
+/var/*
 
 #API
-/tmp/sessions/*
+/tmp/*
 /uploads/*
 
 # BDD
 /bdd/interaction.sqlite
 
 # CAP
-/log/capistrano.log
+/log/*

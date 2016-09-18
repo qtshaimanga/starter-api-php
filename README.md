@@ -1,7 +1,7 @@
 # API with SILEX
 
 ## USE Doctrine, Sqlite, Security Service Provider, Capistrano...
-##### by q.tshaimanga@gmail.com
+##### q.tshaimanga@gmail.com
 
 ## Install localy
   - curl -s http://getcomposer.org/installer | php
@@ -9,9 +9,9 @@
   - composer install
 
 #### Run dev serve
-  - php -S localhost:8000 -t serve serve/index.php
-  - php -S localhost:8000 -t serve index.php
+  - php -S localhost:8000 -t ./ ./index.php
 
 #### Prod
+  - git add . / commit / push
   - cap production deploy
   - cap production apache:conf

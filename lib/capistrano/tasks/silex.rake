@@ -23,7 +23,7 @@ namespace :silex do
   desc 'Restart Apache'
   task :restart_apache do
     on roles(:web) do
-      sudo :service, 'apache2', :restart
+      sudo :service, :apache2, :restart
     end
   end
 

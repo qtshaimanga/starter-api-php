@@ -15,24 +15,22 @@
   - php -S localhost:8000 -t ./ ./index.php
 ````
 
-## Build and Production
+## Build and Production in api.air-edf.io/project
 ````
   - [server] add /var/www/api/projectName
+  - set deploy.rb
 ```
 ```
   - After git add . / commit / push
   - cap production deploy (automatic install)
-  - cap production apache:conf
+````
+
+## Apache configuration if deploy in other folder
+````
+  - cap production apache:conf  
 ````
 
 ### App crash > rollbask to the previous release
 ````
   - cap production deploy:rollback
 ````
-
-
-
-<!-- api.air-edf.io/projectName
-projectName.air-edf.io
-cf.apache.rake et apache-conf.erb
--->

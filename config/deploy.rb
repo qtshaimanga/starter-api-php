@@ -2,7 +2,7 @@
 lock '3.6.1'
 
 set :application, 'starterApiSecure'
-
+set :deploy_to, '/var/www/api/starterApiSecure'
 set :repo_url, 'git@github.com:airEDF/starter-api-secure-php.git'
 set :git_https_username, 'air-edf'
 set :ssh_options, {:forward_agent => true, :keys => ['~/.ssh/id_rsa.pub']}
@@ -36,7 +36,7 @@ set :linked_dirs, fetch(:linked_dirs, []).push('tmp/sessions', 'uploads', 'var/c
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
 # Default value for keep_releases is 5
-set :keep_releases, 3
+set :keep_releases, 2
 
 namespace :deploy do
 

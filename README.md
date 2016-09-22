@@ -22,7 +22,7 @@
 ```
 ```
   - After git add . / commit / push
-  - cap production deploy (automatic install)
+  - cap production deploy (set server info before automatic install)
 ````
 
 ## Apache configuration if deploy in other folder

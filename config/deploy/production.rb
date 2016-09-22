@@ -3,7 +3,10 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server '151.80.58.17', user: 'deploy', roles: %w{app db web}, port: 999
+ask(:server_ip, '151.80.58.17', echo: true)
+ask(:server_user, nil, echo: true)
+ask(:server_port, nil, echo: true)
+server fetch(:server_ip), user: fetch(:server_user), roles: %w{app db web}, port: fetch(:server_port)
 # server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
@@ -12,7 +15,6 @@ server '151.80.58.17', user: 'deploy', roles: %w{app db web}, port: 999
 
 # role-based syntax
 # ==================
-
 # Defines a role with one or multiple servers. The primary server in each
 # group is considered to be the first unless any  hosts have the primary
 # property set. Specify the username and a domain or IP for the server.

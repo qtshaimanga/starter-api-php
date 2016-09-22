@@ -2,6 +2,7 @@
 
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
 header('Access-Control-Allow-Origin: http://localhost:8080, https://'.$_SERVER['HTTP_HOST']);
+//https://api.air-edf.io
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PUT');
 header('content-type: application/json; charset=utf-8');

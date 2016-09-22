@@ -6,6 +6,7 @@ set :deploy_to, '/var/www/api/starterApiSecure'
 set :repo_url, 'git@github.com:airEDF/starter-api-secure-php.git'
 set :git_https_username, 'air-edf'
 set :ssh_options, {:forward_agent => true, :keys => ['~/.ssh/id_rsa.pub']}
+set :log_level, :debug
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp

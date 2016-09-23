@@ -18,7 +18,7 @@
 ## Build and Production in api.air-edf.io/project
 ````
   - [server] add /var/www/api/projectName
-  - set deploy.rb
+  - set deploy.rb : repo and name
 ```
 ```
   - After git add . / commit / push

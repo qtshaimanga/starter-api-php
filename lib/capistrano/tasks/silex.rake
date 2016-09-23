@@ -8,14 +8,23 @@ namespace :silex do
     end
   end
 
+  desc 'Create logs folder'
+  task :logs do
+    on roles(:web) do
+      within release_path do
+        execute :mkdir, :logs
+      end
+    end
+  end
+
   desc 'update les permissions bdd, cache et uploads folders'
   task :premissions do
     on roles(:web) do
       within release_path do
-        execute :chmod, '777', '-R', 'uploads/'
-        sudo :chmod, '755', '-R', 'var/cache'
-        sudo :chmod, '755', '-R', 'var/logs'
-        sudo :chmod, '755', '-R', 'bdd/'
+        execute :chmod,'-R', '777', 'uploads/'
+        sudo :chmod,'-R', '755', 'var/cache'
+        sudo :chmod,'-R', '755', 'var/logs'
+        sudo :chmod,'-R', '755', 'bdd/'
       end
     end
   end

@@ -17,7 +17,10 @@
 
 ## Build and Production in api.air-edf.io/project
 ````
-  - [server] add /var/www/api/projectName and create linked_files and linked_dirs
+  - [server]
+    - add /var/www/api/projectName
+    - create linked_files and linked_dirs
+    - set chown for www-data:www-data uploads, tmp/sessions, shared/logs and shared/cache
   - set deploy.rb : repo and name
 ```
 ```

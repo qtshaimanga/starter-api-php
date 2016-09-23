@@ -1,5 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^$ /current/ [L]
+    Options FollowSymLinks
+    RewriteRule ^ index.php [L,QSA]
 </IfModule>

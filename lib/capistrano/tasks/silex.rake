@@ -23,10 +23,10 @@ namespace :silex do
       within release_path do
         execute :chmod,'-R', '777', 'uploads/'
         # sudo :chown, '-R', 'www-data:www-data', 'var/cache'
-        sudo :chown, '-R', 'www-data:www-data', '/shared/var/cache'
+        sudo :chown, '-R', 'www-data:www-data', 'shared/var/cache'
         sudo :chmod,'-R', '755', 'var/cache'
         # sudo :chown, '-R', 'www-data:www-data', 'var/logs'
-        sudo :chown, '-R', 'www-data:www-data', '/shared/var/logs'
+        sudo :chown, '-R', 'www-data:www-data', 'shared/var/logs'
         sudo :chmod,'-R', '755', 'var/logs'
         sudo :chmod,'-R', '755', 'bdd/'
       end

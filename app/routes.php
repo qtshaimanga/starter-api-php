@@ -7,6 +7,6 @@ use Silex\Application;
 use Api\UserBundle\Entity\User;
 
   /* GET */
-  $app->get('/starterApiSecure/current/api', "Api\UserBundle\Controller\UserController::AllUser")->bind('api_all_user');
+  $app->get('/api', "Api\UserBundle\Controller\UserController::AllUser")->bind('api_all_user');
 
-  $app->get('/starterApiSecure/current/login', "Api\UserBundle\Controller\UserController::loginAction")->bind('login');
+  $app->get('/login', "Api\UserBundle\Controller\UserController::loginAction")->bind('login');

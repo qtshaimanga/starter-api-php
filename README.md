@@ -17,7 +17,7 @@
 
 ## Build and Production in api.air-edf.io/project
 ````
-  - [server] add /var/www/api/projectName
+  - [server] add /var/www/api/projectName and create linked_files and linked_dirs
   - set deploy.rb : repo and name
 ```
 ```

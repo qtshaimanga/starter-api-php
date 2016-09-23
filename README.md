@@ -15,11 +15,11 @@
   - php -S localhost:8000 -t ./ ./index.php
 ````
 
-## Build and Production in api.air-edf.io/project
+## Build and Production in api.air-edf.io/project/current
 ````
   - [server]
     - add /var/www/api/projectName
-    - create linked_files and linked_dirs
+    - create linked_files and linked_dirs and .htaccess with rules for current
     - set chown for www-data:www-data tmp/*, shared/logs/* and shared/cache/*
     - install bdd
   - set deploy.rb : repo and name

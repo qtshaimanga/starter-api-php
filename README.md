@@ -21,6 +21,7 @@
     - add /var/www/api/projectName
     - create linked_files and linked_dirs
     - set chown for www-data:www-data tmp/*, shared/logs/* and shared/cache/*
+    - install bdd
   - set deploy.rb : repo and name
 ```
 ```

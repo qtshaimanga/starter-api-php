@@ -38,3 +38,12 @@
 ````
   - cap production deploy:rollback
 ````
+
+
+
+
+<!--
+Ré-installer pour interaction.io, copier bdd, copier UserBundle
+Rendre plus generique le role user dans bdd.sqlite, importer download bundle
+Ré-installer le front
+-->

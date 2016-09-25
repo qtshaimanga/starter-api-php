@@ -29,7 +29,7 @@ set :log_level, :debug
 # set :pty, true
 
 # Default value for :linked_files is []
-set :linked_files, fetch(:linked_files, []).push('bdd/interaction.sqlite')
+set :linked_files, fetch(:linked_files, []).push('bdd/bdd.sqlite')
 
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('tmp/sessions', 'uploads', 'var/cache', 'var/logs')

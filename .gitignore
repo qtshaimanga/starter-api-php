@@ -10,7 +10,7 @@
 /uploads/*
 
 # BDD
-/bdd/interaction.sqlite
+/bdd/*
 
 # CAP
 /log/*

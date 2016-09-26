@@ -3,10 +3,12 @@
 
 # SILEX
 /vendor/
-/var/*
+/var/cache/*
+/var/logs/*
+
 
 #API
-/tmp/*
+/tmp/sessions/*
 /uploads/*
 
 # BDD

@@ -14,7 +14,7 @@
 # BDD
 /bdd/*
 # Setup DEV BDD
-!/bdd/bdd.sql
+!bdd/bdd.sql
 
 # CAP
 /log/*

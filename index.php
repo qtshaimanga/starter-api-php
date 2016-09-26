@@ -21,7 +21,7 @@ if (php_sapi_name() === 'cli-server' && is_file($filename)) {
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver'   => 'pdo_sqlite',
-        'path'     => __DIR__.'/bdd/interaction.sqlite',
+        'path'     => __DIR__.'/bdd/bdd.sqlite',
     ),
 ));
 

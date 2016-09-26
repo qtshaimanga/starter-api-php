@@ -8,6 +8,7 @@
   - curl -s http://getcomposer.org/installer | php
   - mv composer.phar /usr/local/bin/composer
   - composer install
+  - create bdd
 ````
 
 ### Run dev serve

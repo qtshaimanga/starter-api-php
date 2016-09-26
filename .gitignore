@@ -13,6 +13,8 @@
 
 # BDD
 /bdd/*
+# Setup DEV BDD
+!/bdd/bdd.sql
 
 # CAP
 /log/*

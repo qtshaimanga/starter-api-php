@@ -21,16 +21,17 @@
   - [server]
     - add /var/www/api/projectName
     - create linked_files and linked_dirs and .htaccess with rules for current
-    - set chown for www-data:www-data tmp/*, shared/logs/* and shared/cache/*
-    - install bdd
+    - set chown for www-data:www-data tmp/*, shared/var/logs/* and shared/var/cache/*
+    - install bdd and set rules
   - set deploy.rb : repo and name
 ```
 ```
   - After git add . / commit / push
   - cap production deploy (set server info before automatic install)
+  - ok
 ````
 
-## Apache configuration if deploy in other folder
+## Apache configuration **if** deploy in other folder
 ````
   - cap production apache:conf  
 ````

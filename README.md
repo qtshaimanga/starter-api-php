@@ -1,14 +1,18 @@
-# API with SILEX Framework
+# API REST + JWT with SILEX Framework
 
-## USE Doctrine, Sqlite, Security Service Provider, Capistrano...
+> TODO : clean, clean Bundle (more generic requests), update Silex ^2.0, set headers, migrate to mysql
+
+## USE Doctrine, Sqlite, Security & cnam/jwt Service Provider, Capistrano...
 ##### q.tshaimanga@gmail.com
 
 ## Install localy
 ````
   - curl -s http://getcomposer.org/installer | php
   - mv composer.phar /usr/local/bin/composer
+  - (composer update)
   - composer install
   - create bdd and import USER
+  - install sqlite driver
 ````
 
 ### Run dev serve
@@ -40,12 +44,3 @@
 ````
   - cap production deploy:rollback
 ````
-
-
-
-
-<!--
-Ré-installer pour interaction.io, copier bdd, copier UserBundle
-Rendre plus generique le role user dans bdd.sqlite, importer download bundle
-Ré-installer le front
--->

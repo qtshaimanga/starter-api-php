@@ -10,7 +10,8 @@
       "symfony/config": "2.7.*",
       "symfony/monolog-bridge": "2.7.*",
       "silex/web-profiler": "1.0.*",
-      "symfony/translation": "2.7.*"
+      "symfony/translation": "2.7.*",
+      "cnam/security-jwt-service-provider":"1.*"
     },
     "autoload": {
       "psr-4": {"Api\\": "src"}

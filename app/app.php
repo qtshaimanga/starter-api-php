@@ -3,18 +3,20 @@
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\Debug\ExceptionHandler;
 
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\InMemoryUserProvider;
+use Symfony\Component\Security\Core\User\User;
+
+// Set Timezone
+date_default_timezone_set('Europe/Paris');
+
 // Register global error and exception handlers
 ErrorHandler::register();
 ExceptionHandler::register();
 
-// Register service providers.
+// Register Twig service providers.
 $app->register(new Silex\Provider\DoctrineServiceProvider());
-$app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => __DIR__.'/../views',
-));
-$app->before(function($request){
-    $request->getSession()->start();
-});
+$app->register(new Silex\Provider\TwigServiceProvider(), array('twig.path' => __DIR__.'/../views'));
 
 $app['twig'] = $app->share($app->extend('twig', function(Twig_Environment $twig, $app) {
     $twig->addExtension(new Twig_Extensions_Extension_Text());
@@ -22,43 +24,66 @@ $app['twig'] = $app->share($app->extend('twig', function(Twig_Environment $twig,
 }));
 
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
-$app->register(new Silex\Provider\SessionServiceProvider(), array(
-    'session.storage.save_path' => __DIR__.'/../tmp/sessions',
-));
-$app->register(new Silex\Provider\SecurityServiceProvider(), array(
-  //'foo' => array('pattern' => '^/foo'),
-  'security.firewalls' => array(
-    'secured' => array(
-      'pattern' => '^/',
-      // 'stateless' => true,
-      'anonymous' => true,
-      'logout' => true, //array('logout_path' => '/deconnexion'),
-      'form' => array(
-        'login_path' => '/login',
-        'check_path' => '/login_check',
-        'require_previous_session' => false,
-        'username_parameter' => '_username',
-        'password_parameter' => '_password',
-        'default_target_path' => '/api',
-        'always_use_default_target_path' => true
-      ),
-      'users' => $app->share(function () use ($app) {
-        return new Api\UserBundle\DAO\UserDAO($app['db']);
-      }),
-    ),
-  ),
-  'security.role_hierarchy' => array(
-    'ROLE_ADMIN' => array('ROLE_USER')
-  ),
-  'security.access_rules' => array(
-    array('^/api', 'ROLE_USER')
-    //array('^/admin', 'ROLE_ADMIN'),
-    //array('^.*$', 'ROLE_USER'),
-    //array('^/foo$', 'IS_AUTHENTICATED_ANONYMOUSLY'),
-  ),
-));
 
-// Register services.
+// Register session service
+// $app->before(function($request){
+//     $request->getSession()->start();
+// });
+
+// $app->register(new Silex\Provider\SessionServiceProvider(), array(
+//     'session.storage.save_path' => __DIR__.'/../tmp/sessions',
+// ));
+
+$app['security.jwt'] = [
+    'secret_key' => 'Very_secret_key',
+    'life_time'  => 86400,
+    'options'    => [
+        'username_claim' => 'name', // default name, option specifying claim containing username
+        'header_name' => 'X-Access-Token', // default null, option for usage normal oauth2 header
+        'token_prefix' => 'Bearer',
+    ]
+];
+
+//TODO
+//$app->register(new Silex\Provider\SecurityServiceProvider(), array(
+// 'security.firewalls' => array(),
+// 'security.role_hierarchy' => array(
+//      ROLE_ADMIN' => array('ROLE_USER')
+//  )
+// 'security.access_rules' => array(
+//      array('^/api', 'ROLE_USER'),
+//  )
+// ));
+
+$app['security.firewalls'] = array(
+    'login' => [
+        'pattern' => 'login|register|oauth',
+        'anonymous' => true,
+    ],
+    'secured' => array(
+        'pattern' => '^.*$',
+        'logout' => array('logout_path' => '/logout'),
+        'users' => $app->share(function () use ($app) {
+            return new Api\UserBundle\DAO\UserDAO($app['db']);
+        }),
+        'jwt' => array(
+            'use_forward' => true,
+            'require_previous_session' => false,
+            'stateless' => true,
+        )
+    ),
+);
+
+$app->register(new Silex\Provider\SecurityServiceProvider());
+
+$app->register(new Silex\Provider\SecurityJWTServiceProvider());
+
+//Register service provider for JWT/cnam
+$app['users'] = $app->share(function ($app) {
+    return new Api\UserBundle\DAO\UserDAO($app['db']);
+});
+
+// Register DATA BASE services
 $app['dao.user'] = $app->share(function ($app) {
     return new Api\UserBundle\DAO\UserDAO($app['db']);
 });
@@ -79,13 +104,17 @@ $app->error(function (\Exception $e, $code) use ($app) {
 });
 
 $app->register(new Silex\Provider\FormServiceProvider());
+
 $app->register(new Silex\Provider\TranslationServiceProvider());
+
 $app->register(new Silex\Provider\ValidatorServiceProvider());
+
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.logfile' => __DIR__.'/../var/logs/api.log',
     'monolog.name' => 'Api',
     'monolog.level' => $app['monolog.level']
 ));
+
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 if (isset($app['debug']) && $app['debug']) {
     $app->register(new Silex\Provider\HttpFragmentServiceProvider());

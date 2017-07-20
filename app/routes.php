@@ -88,6 +88,15 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
     return $app->json($response, ($response['success'] == true ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST));
   });
 
+  /*TODO*/
+  $app->post('/api/register', function(Request $request) use ($app){
+
+    parse_str($request->getContent(), $data);
+    //$vars['_password']
+
+    return $app->json_encode();
+
+  });
 
   /*PUT*/
 

@@ -20,4 +20,10 @@ class UserController {
     ));
   }
 
+  public function register(Request $request, Application $app){
+    //encode
+    $user = $app['dao.user']->addUser($nom);
+    return json_encode($user);
+  }
+
 }

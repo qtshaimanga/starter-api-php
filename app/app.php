@@ -38,7 +38,7 @@ $app->before(function (Symfony\Component\HttpFoundation\Request $request) {
 
 $app['security.jwt'] = [
     'secret_key' => 'Very_secret_key',
-    'life_time'  => 86400,
+    'life_time'  => 86400,  //TODO check that
     'options'    => [
         'username_claim' => 'name', // default name, option specifying claim containing username
         'header_name' => 'X-Access-Token', // default null, option for usage normal oauth2 header
@@ -64,7 +64,7 @@ $app['security.firewalls'] = array(
     ],
     'secured' => array(
         'pattern' => '^.*$',
-        'logout' => array('logout_path' => '/logout'),
+        'logout' => array('logout_path' => '/api/logout'),
         'users' => $app->share(function () use ($app) {
             return new Api\UserBundle\DAO\UserDAO($app['db']);
         }),

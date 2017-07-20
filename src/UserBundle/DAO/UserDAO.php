@@ -12,6 +12,9 @@ use Api\UserBundle\Entity\User;
 class UserDAO extends DAO implements UserProviderInterface
 {
 
+  /*
+  * FIN ALL USERS
+  */
   public function findAll() {
     $sql = "SELECT rowid, * FROM USER";
     $result = $this->getDb()->fetchAll($sql);
@@ -23,10 +26,19 @@ class UserDAO extends DAO implements UserProviderInterface
     return $result;
   }
 
+  /*
+  * ADD USER
+  */
+  public function addUser($nom, ?){
+    // $sql = "INSERT ?";
+    // $row = $this->getDb()->fetchAssoc($sql, array(?));
+    return true
+  }
+
   /**
   * {@inheritDoc}
   */
-  public function loadUserByUsername($username) {
+  public c loadUserByUsername($username) {
     $sql = "SELECT rowid, * FROM USER WHERE nom=?";
     $row = $this->getDb()->fetchAssoc($sql, array($username));
 

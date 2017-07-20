@@ -25,14 +25,16 @@ $app['twig'] = $app->share($app->extend('twig', function(Twig_Environment $twig,
 
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
-// Register session service
-// $app->before(function($request){
-//     $request->getSession()->start();
-// });
-
-// $app->register(new Silex\Provider\SessionServiceProvider(), array(
-//     'session.storage.save_path' => __DIR__.'/../tmp/sessions',
-// ));
+$app->before(function (Symfony\Component\HttpFoundation\Request $request) {
+    if ($request->getMethod() === "OPTIONS") {
+        $response = new \Symfony\Component\HttpFoundation\ResponseHeaderBag();
+        $response->headers->set("Access-Control-Allow-Origin", "*");
+        $response->headers->set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+        $response->headers->set("Access-Control-Allow-Headers", "Content-Type");
+        $response->setStatusCode(200);
+        return $response->send();
+    }
+}, \Silex\Application::EARLY_EVENT);
 
 $app['security.jwt'] = [
     'secret_key' => 'Very_secret_key',

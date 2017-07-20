@@ -23,6 +23,8 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
       $jwt = 'no';
       $token = $app['security.token_storage']->getToken();
+      //var_dump($token);
+
       if ($token instanceof Silex\Component\Security\Http\Token\JWTToken) {
           $jwt = 'yes';
       }
@@ -54,16 +56,12 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
   /*POST*/
 
   $app->post('/api/login', function(Request $request) use ($app){
-    $vars = json_decode($request->getContent(), true);
 
-    //test
-    $salt = "cocacola";
-    $encoder = new MessageDigestPasswordEncoder();
-    $mdp_crypted = $encoder->encodePassword('foo', $salt);
+    parse_str($request->getContent(), $vars);
 
     try {
       if (empty($vars['_username']) || empty($vars['_password'])) {
-          throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $vars['_username']));
+          throw new UsernameNotFoundException(sprintf('Username " - %s - " is empty.', $vars['_username']));
       }
 
       /**
@@ -71,8 +69,8 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
        */
       $user = $app['dao.user']->loadUserByUsername($vars['_username']);
 
-      if (! $app['security.encoder.digest']->isPasswordValid($user->getPassword(), $vars['_password'], $salt)) {
-          throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $vars['_username']));
+      if (! $app['security.encoder.digest']->isPasswordValid($user->getPassword(), $vars['_password'], $user->getSalt() ) ) {
+          throw new UsernameNotFoundException(sprintf('Username "%s" is not valid.'.$user->getPassword().' - ', $vars['_username']));
       } else {
           $response = [
               'success' => true,
@@ -83,7 +81,7 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
       $response = [
           'success' => false,
-          'error' => 'Invalid credentials ',
+          'error' => 'Invalid credentials '.$e,
       ];
     }
 

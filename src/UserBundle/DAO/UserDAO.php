@@ -29,11 +29,13 @@ class UserDAO extends DAO implements UserProviderInterface
   public function loadUserByUsername($username) {
     $sql = "SELECT rowid, * FROM USER WHERE nom=?";
     $row = $this->getDb()->fetchAssoc($sql, array($username));
+
     if ($row){
       return $this->buildDomainObject($row);
     }else{
       throw new UsernameNotFoundException(sprintf('User "%s" not found.', $username));
     }
+
   }
 
   /**

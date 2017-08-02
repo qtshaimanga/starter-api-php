@@ -21,12 +21,13 @@ namespace :silex do
   task :premissions do
     on roles(:web) do
       within release_path do
-        execute :chmod,'-R', '777', 'uploads/'
+        sudo :chmod, '-R', '755', 'uploads/'
+        sudo :chown, '-R', 'www-data:www-data', 'uploads/'
         sudo :chown, '-R', 'www-data:www-data', 'var/cache'
-        sudo :chmod,'-R', '755', 'var/cache'
+        sudo :chmod, '-R', '755', 'var/cache'
         sudo :chown, '-R', 'www-data:www-data', 'var/logs'
-        sudo :chmod,'-R', '755', 'var/logs'
-        sudo :chmod,'-R', '755', 'bdd/'
+        sudo :chmod, '-R', '755', 'var/logs'
+        sudo :chmod, '-R', '755', 'bdd/'
       end
     end
   end

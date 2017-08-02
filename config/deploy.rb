@@ -1,11 +1,11 @@
 # config valid only for current version of Capistrano
-lock '3.6.1'
+lock '3.8.2'
 
 set :application, 'starterApiSecure'
 set :deploy_to, '/var/www/api/starterApiSecure'
 set :repo_url, 'git@github.com:airEDF/starter-api-secure-php.git'
 
-set :git_https_username, 'air-edf'
+set :git_https_username, 'laboratoirei2r'
 set :ssh_options, {:forward_agent => true, :keys => ['~/.ssh/id_rsa.pub']}
 set :log_level, :debug
 
@@ -13,7 +13,8 @@ set :log_level, :debug
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/var/www/html/my_app_name'
+ask(:path_project, 'Path pf the project for deploy', echo: true)
+set :deploy_to, fetch(:path_project)
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -54,6 +55,6 @@ namespace :deploy do
     invoke "silex:premissions"
   end
 
-  after :finished, "silex:restart_apache"
+  after :finished, "docker:apache_restart"
 
 end

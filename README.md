@@ -27,6 +27,7 @@
     - install bdd and set rules
   - set deploy.rb : repo and name
 ```
+
 ```
   - After git add . / commit / push
   - cap production deploy (set server info before automatic install)

@@ -8,37 +8,37 @@ class User implements UserInterface
 {
 
   /**
-  * User id.
+  * User $id.
   * @var integer
   */
   private $id;
 
   /**
-  * User nom.
+  * User $username.
   * @var varchar
   */
   private $username;
 
   /**
-  * User prenom.
+  * User $firstname.
   * @var varchar
   */
-  private $prenom;
+  private $firstname;
 
   /**
-  * User email.
+  * User $email.
   * @var varchar
   */
   private $email;
 
   /**
-  * User $entreprise.
+  * User $business.
   * @var varchar
   */
-  private $entreprise;
+  private $business;
 
   /**
-  * User $mdp.
+  * User $password.
   * @var varchar
   */
   private $password;
@@ -54,6 +54,7 @@ class User implements UserInterface
   * @var varchar
   */
   private $salt;
+
 
   public function getId() {
     return $this->id;
@@ -77,12 +78,12 @@ class User implements UserInterface
   /**
   * @inheritDoc
   */
-  public function getPrenom() {
-    return $this->prenom;
+  public function getFirstname() {
+    return $this->firstname;
   }
 
-  public function setPrenom($prenom) {
-    $this->prenom = $prenom;
+  public function setFirstname($firstname) {
+    $this->firstname = $firstname;
   }
 
   /**
@@ -99,12 +100,12 @@ class User implements UserInterface
   /**
   * @inheritDoc
   */
-  public function getEntreprise() {
-    return $this->entreprise;
+  public function getBusiness() {
+    return $this->business;
   }
 
-  public function setEntreprise($entreprise) {
-    $this->entreprise = $entreprise;
+  public function setBusiness($business) {
+    $this->business = $business;
   }
 
   /**

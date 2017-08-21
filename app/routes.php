@@ -12,18 +12,12 @@ use Symfony\Component\Security\Core\User\User;
 
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
-//TODO rename UserDao
-// use Api\UserBundle\Entity\User;
-
   /* GET */
   // $app->get('/', "Api\UserBundle\Controller\UserController::AllUser")->bind('api_all_user');
-  // $app->get('/login', "Api\UserBundle\Controller\UserController::loginAction")->bind('login');
-
   $app->get('/api/user', function() use ($app){
 
       $jwt = 'no';
       $token = $app['security.token_storage']->getToken();
-      //var_dump($token);
 
       if ($token instanceof Silex\Component\Security\Http\Token\JWTToken) {
           $jwt = 'yes';
@@ -46,6 +40,8 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
       return $app->json([
           'hello' => $token->getUsername(),
           'username' => $user->getUsername(),
+          'firstname' => $user->getFirstname(),
+          'email' => $user->getEmail(),
           'auth' => $jwt,
           'granted' => $granted,
           'granted_user' => $granted_user,
@@ -54,7 +50,6 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
   });
 
   /*POST*/
-
   $app->post('/api/login', function(Request $request) use ($app){
 
     parse_str($request->getContent(), $vars);
@@ -74,7 +69,7 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
       } else {
           $response = [
               'success' => true,
-              'token' => $app['security.jwt.encoder']->encode(['name' => $user->getUsername()]),
+              'token' => $app['security.jwt.encoder']->encode(['email' => $user->getEmail()]),
           ];
       }
     } catch (UsernameNotFoundException $e) {
@@ -89,14 +84,15 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
   });
 
   /*TODO*/
-  $app->post('/api/register', function(Request $request) use ($app){
+  // $app->post('/api/register', function(Request $request) use ($app){
+  //
+  //   parse_str($request->getContent(), $data);
+  //   //$vars['_password']
+  //
+  //   return $app->json_encode();
+  //
+  // });
 
-    parse_str($request->getContent(), $data);
-    //$vars['_password']
-
-    return $app->json_encode();
-
-  });
 
   /*PUT*/
 

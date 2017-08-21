@@ -36,46 +36,45 @@ $app->before(function (Symfony\Component\HttpFoundation\Request $request) {
     }
 }, \Silex\Application::EARLY_EVENT);
 
-$app['security.jwt'] = [
-    'secret_key' => 'Very_secret_key',
-    'life_time'  => 86400,  //TODO check that
-    'options'    => [
-        'username_claim' => 'name', // default name, option specifying claim containing username
-        'header_name' => 'X-Access-Token', // default null, option for usage normal oauth2 header
-        'token_prefix' => 'Bearer',
-    ]
-];
 
 //TODO
-//$app->register(new Silex\Provider\SecurityServiceProvider(), array(
-// 'security.firewalls' => array(),
-// 'security.role_hierarchy' => array(
-//      ROLE_ADMIN' => array('ROLE_USER')
-//  )
-// 'security.access_rules' => array(
-//      array('^/api', 'ROLE_USER'),
-//  )
-// ));
-
-$app['security.firewalls'] = array(
-    'login' => [
-        'pattern' => 'login|register|oauth',
-        'anonymous' => true,
-    ],
-    'secured' => array(
-        'pattern' => '^.*$',
-        'logout' => array('logout_path' => '/api/logout'),
-        'users' => $app->share(function () use ($app) {
-            return new Api\UserBundle\DAO\UserDAO($app['db']);
-        }),
-        'jwt' => array(
-            'use_forward' => true,
-            'require_previous_session' => false,
-            'stateless' => true,
+$app->register(new Silex\Provider\SecurityServiceProvider(), array(
+    'security.firewalls' => array(
+        'login' => array(
+            'pattern' => 'login|register|oauth',
+            'anonymous' => true,
+        ),
+        'secured' => array(
+            'pattern' => '^.*$',
+            'logout' => array('logout_path' => '/api/logout'),
+            'users' => $app->share(function () use ($app) {
+                return new Api\UserBundle\DAO\UserDAO($app['db']);
+            }),
+            'jwt' => array(
+                'use_forward' => true,
+                'require_previous_session' => false,
+                'stateless' => true,
+            )
         )
     ),
-);
+    'security.role_hierarchy' => array(
+         'ROLE_ADMIN' => array('ROLE_USER')
+     ),
+    'security.access_rules' => array(
+         array('^/api', 'ROLE_USER'),
+     ),
+     'security.jwt' => array(
+         'secret_key' => 'Very_secret_key',
+         'life_time'  => 25920000,
+         'options'    => array(
+             'username_claim' => 'email',
+             'header_name' => 'X-Access-Token',
+             'token_prefix' => 'Bearer',
+        )
+     )
+));
 
+// Register security's services
 $app->register(new Silex\Provider\SecurityServiceProvider());
 
 $app->register(new Silex\Provider\SecurityJWTServiceProvider());
@@ -85,7 +84,7 @@ $app['users'] = $app->share(function ($app) {
     return new Api\UserBundle\DAO\UserDAO($app['db']);
 });
 
-// Register DATA BASE services
+// Register DATABASE services
 $app['dao.user'] = $app->share(function ($app) {
     return new Api\UserBundle\DAO\UserDAO($app['db']);
 });

@@ -15,31 +15,34 @@ class UserDAO extends DAO implements UserProviderInterface
   /*
   * FIN ALL USERS
   */
-  public function findAll() {
+  public function findAll()
+  {
     $sql = "SELECT rowid, * FROM USER";
     $result = $this->getDb()->fetchAll($sql);
-    // $entities = array();
-    // foreach ($result as $row) {
-    //   $id = $row['rowid'];
-    //   $entities[$id] = $this->buildDomainObject($row);
-    // }
+      // $entities = array();
+      // foreach ($result as $row) {
+      //   $id = $row['rowid'];
+      //   $entities[$id] = $this->buildDomainObject($row);
+      // }
     return $result;
   }
 
-  /*
+  /* TODO
   * ADD USER
   */
-  public function addUser($nom, ?){
-    // $sql = "INSERT ?";
-    // $row = $this->getDb()->fetchAssoc($sql, array(?));
-    return true
-  }
+  // public function addUser($nom, ?)
+  // {
+  //   // $sql = "INSERT ?";
+  //   // $row = $this->getDb()->fetchAssoc($sql, array(?));
+  //   return true
+  // }
 
   /**
   * {@inheritDoc}
   */
-  public c loadUserByUsername($username) {
-    $sql = "SELECT rowid, * FROM USER WHERE nom=?";
+  public function loadUserByUsername($username)
+  {
+    $sql = "SELECT rowid, * FROM USER WHERE email=?";
     $row = $this->getDb()->fetchAssoc($sql, array($username));
 
     if ($row){
@@ -47,7 +50,6 @@ class UserDAO extends DAO implements UserProviderInterface
     }else{
       throw new UsernameNotFoundException(sprintf('User "%s" not found.', $username));
     }
-
   }
 
   /**
@@ -76,13 +78,15 @@ class UserDAO extends DAO implements UserProviderInterface
    * @param array $row The DB row containing User data.
    * @return \Api\UserBundle\Entity\User
    */
-   protected function buildDomainObject($row) {
+   protected function buildDomainObject($row)
+   {
       $user = new User();
       $user->setId($row['rowid']);
-      $user->setUsername($row['nom']);
-      $user->setPrenom($row['prenom']);
-      $user->setEntreprise($row['entreprise']);
-      $user->setPassword($row['mdp']);
+      $user->setUsername($row['username']);
+      $user->setFirstname($row['firstname']);
+      $user->setEmail($row['email']);
+      $user->setBusiness($row['business']);
+      $user->setPassword($row['password']);
       $user->setSalt($row['salt']);
       $user->setRole($row['role']);
       return $user;

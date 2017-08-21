@@ -19,13 +19,17 @@ class UserDAO extends DAO implements UserProviderInterface
   {
     $sql = "SELECT rowid, * FROM USER";
     $result = $this->getDb()->fetchAll($sql);
-      // $entities = array();
-      // foreach ($result as $row) {
-      //   $id = $row['rowid'];
-      //   $entities[$id] = $this->buildDomainObject($row);
-      // }
     return $result;
   }
+
+  /* TODO
+  * User BY id
+  */
+  // $entities = array();
+  // foreach ($result as $row) {
+  //   $id = $row['rowid'];
+  //   $entities[$id] = $this->buildDomainObject($row);
+  // }
 
   /* TODO
   * ADD USER

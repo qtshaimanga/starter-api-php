@@ -1,7 +1,5 @@
 # API REST + JWT with SILEX Framework
 
-> TODO : clean, clean Bundle (more generic requests), update Silex ^2.0, add websocket, migrate to mysql
-
 ## USE Doctrine, Sqlite, Security & cnam/jwt Service Provider, Capistrano...
 ##### quentin.tshaimanga@edf.fr
 
@@ -15,7 +13,7 @@
   - install sqlite driver
 ````
 
-### Run dev serve
+### Run dev server
 ````
   - php -S localhost:8000 -t ./ ./index.php
 ````
@@ -28,12 +26,13 @@
     - set chown for www-data:www-data tmp/*, shared/var/logs/* and shared/var/cache/*
     - install bdd and set rules
   - set deploy.rb : repo and name
-```
+````
+
 ```
   - After git add . / commit / push
   - cap production deploy (set server info before automatic install)
   - ok
-````
+```
 
 ## Apache configuration **if** deploy in other folder
 ````

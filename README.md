@@ -32,7 +32,7 @@
   - After git add . / commit / push
   - cap production deploy (set server info before automatic install)
   - ok
-````
+```
 
 ## Apache configuration **if** deploy in other folder
 ````

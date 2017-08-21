@@ -1,7 +1,5 @@
 # API REST + JWT with SILEX Framework
 
-> TODO : clean, clean Bundle (more generic requests), update Silex ^2.0, add websocket, migrate to mysql
-
 ## USE Doctrine, Sqlite, Security & cnam/jwt Service Provider, Capistrano...
 ##### quentin.tshaimanga@edf.fr
 

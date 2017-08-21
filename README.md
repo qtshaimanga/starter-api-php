@@ -26,7 +26,7 @@
     - set chown for www-data:www-data tmp/*, shared/var/logs/* and shared/var/cache/*
     - install bdd and set rules
   - set deploy.rb : repo and name
-```
+````
 
 ```
   - After git add . / commit / push

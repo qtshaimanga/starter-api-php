@@ -13,7 +13,7 @@
   - install sqlite driver
 ````
 
-### Run dev serve
+### Run dev server
 ````
   - php -S localhost:8000 -t ./ ./index.php
 ````

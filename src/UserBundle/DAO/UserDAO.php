@@ -25,21 +25,34 @@ class UserDAO extends DAO implements UserProviderInterface
   /* TODO
   * User BY id
   */
-  // $entities = array();
-  // foreach ($result as $row) {
-  //   $id = $row['rowid'];
-  //   $entities[$id] = $this->buildDomainObject($row);
-  // }
+  public function findAllById($id)
+  {
+    // $sql = "SELECT rowid, * FROM USER WHERE rowid=?";
+    // $result = $this->getDb()->fetchAll($sql);
+    // return $result;
+  }
+
+
+  /*
+  * ADD USER
+  */
+  public function addUser($user)
+  {
+    $sql = "INSERT INTO USER (username, firstname, email, business, password, role, salt) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $resutl = $this->getDb()->fetchAssoc( $sql, array( $user['username'], $user['firstname'], $user['email'], $user['business'], $user['_password'], $user['role'], $user['salt'] ) );
+    return $resutl;
+  }
 
   /* TODO
   * ADD USER
   */
-  // public function addUser($nom, ?)
-  // {
-  //   // $sql = "INSERT ?";
-  //   // $row = $this->getDb()->fetchAssoc($sql, array(?));
-  //   return true
-  // }
+  public function deleteUser($user)
+  {
+    $sql = "DELETE FROM USER WHERE rowid=?";
+    $resutl = $this->getDb()->fetchAssoc($user['id']);
+    return $resutl;
+  }
+
 
   /**
   * {@inheritDoc}

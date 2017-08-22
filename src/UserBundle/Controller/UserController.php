@@ -21,7 +21,7 @@ class UserController
   /*
   * return all users
   */
-  public function FindAllUsers(Application $app)
+  public function FindAllUsers (Application $app)
   {
 
     $token = $app['security.token_storage']->getToken();
@@ -50,7 +50,7 @@ class UserController
   }
 
 
-  public function UserByToken(Application $app)
+  public function UserByToken (Application $app)
   {
 
     $jwt = 'no';
@@ -87,7 +87,7 @@ class UserController
   }
 
 
-  public function Login(Request $request, Application $app)
+  public function Login (Request $request, Application $app)
   {
 
     parse_str($request->getContent(), $vars);
@@ -120,14 +120,39 @@ class UserController
   }
 
 
-  /*TODO
+  /*
   * register
   */
-  //public function register(Request $request, Application $app){
-    // encode informations
-    // $user = $app['dao.user']->addUser($nom);
-    // return json_encode($user);
-  //}
+  public function Register (Request $request, Application $app)
+  {
+    parse_str($request->getContent(), $data);
+    $salt = 'cocacola';
+    $encoder = new MessageDigestPasswordEncoder();
+    $data['salt'] = $salt;
+    $data['_password'] = $encoder->encodePassword($data['password'], $salt);
+    $result = $app['dao.user']->addUser($data);
+
+    return json_encode($result);
+  }
+
+  /*
+  * Logout
+  */
+  public function Logout (Request $request, Application $app)
+  {
+
+    return false
+  }
+
+  /*
+  * Delete User
+  */
+  public function DeleteUser (Request $request, Application $app)
+  {
+    parse_str($request->getContent(), $data);
+    $result = $app['dao.user']->deleteUser($data);
+    return json_encode($result);
+  }
 
 
   /* TODO

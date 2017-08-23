@@ -52,13 +52,33 @@ class UserDAO extends DAO implements UserProviderInterface
     return $resutl;
   }
 
-  /* TODO
-  * ADD USER
+  /*
+  * Delete USER
   */
   public function deleteUser($user)
   {
     $sql = "DELETE FROM USER WHERE rowid=?";
     $resutl = $this->getDb()->fetchAssoc($sql, array($user['id']));
+    return $resutl;
+  }
+
+  /*
+  * Update User
+  */
+  public function UpdateUser($data)
+  {
+    $sql = "UPDATE USER SET (username, firstname, email, business) VALUES (?, ?, ?, ?) WHERE rowid=?";
+    $resutl = $this->getDb()->fetchAssoc($sql, array($data['username'], $data['firstname'], $data['email'], $data['business'], $data['id']));
+    return $resutl;
+  }
+
+  /*
+  * Update User Role
+  */
+  public function UpdateUserRole($data)
+  {
+    $sql = "UPDATE USER SET (role) VALUES (?) WHERE rowid=?";
+    $resutl = $this->getDb()->fetchAssoc($sql, array($data['role'], $data['id']));
     return $resutl;
   }
 

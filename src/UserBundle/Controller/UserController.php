@@ -20,7 +20,7 @@ class UserController
 {
 
   /*
-  * return all users
+  * GET all users
   */
   public function FindAllUsers (Application $app)
   {
@@ -29,22 +29,16 @@ class UserController
     try {
 
       if($app['security.authorization_checker']->isGranted('ROLE_ADMIN')) {
-
         $response = $app['dao.user']->findAll();
-
       }else{
-
         throw new AccessDeniedException('Access denied for this username...');
-
       }
 
     } catch (AccessDeniedException $e) {
-
       $response = [
           'acces' => 'denied',
           'error' => 'Invalid role...',
       ];
-
     }
 
     $format = "json";
@@ -52,7 +46,9 @@ class UserController
     return new Response($users, 200);
   }
 
-
+  /*
+  * GET current user
+  */
   public function UserByToken (Application $app)
   {
 
@@ -83,7 +79,9 @@ class UserController
 
   }
 
-
+  /*
+  * POST Login
+  */
   public function Login (Request $request, Application $app)
   {
 
@@ -118,7 +116,7 @@ class UserController
 
 
   /*
-  * register
+  * POST register
   */
   public function Register (Request $request, Application $app)
   {
@@ -127,22 +125,58 @@ class UserController
     $encoder = new MessageDigestPasswordEncoder();
     $data['salt'] = $salt;
     $data['_password'] = $encoder->encodePassword($data['password'], $salt);
-    $result = $app['dao.user']->addUser($data);
+    $result = json_encode($app['dao.user']->addUser($data));
+
+    return new Response($result, 200);
+  }
+
+
+  /*
+  * POST Update User by id
+  */
+  public function UpdateUser (Request $request, Application $app)
+  {
+    // check if is my id or if i'm ROLE_ADMIN
+    parse_str($request->getContent(), $data);
+    $user = $app['dao.user']->UpdateUser($data);
+    $format = "json";
+    $result = $app['serializer']->serialize($user, $format);
 
     return new Response($result, 200);
   }
 
   /*
-  * Logout
+  * POST Update User ROLE
   */
-  // public function Logout (Request $request, Application $app)
-  // {
-  //
-  //   return false
-  // }
+  public function UpdateUserRole (Request $request, Application $app)
+  {
+    // check if i'm ROLE_ADMIN
+    parse_str($request->getContent(), $data);
+    $user = $app['dao.user']->UpdateUserRole($data);
+    $format = "json";
+    $result = $app['serializer']->serialize($user, $format);
+
+    return new Response($result, 200);
+  }
 
   /*
-  * Delete User
+  * POST Renewal
+  */
+  public function Renewal (Request $request, Application $app)
+  {
+
+  }
+
+  /*
+  * POST Logout
+  */
+  public function Logout (Request $request, Application $app)
+  {
+
+  }
+
+  /*
+  * Find User By id
   */
   public function UserById (Application $app, $id)
   {
@@ -154,12 +188,12 @@ class UserController
   }
 
   /*
-  * Find User By id
+  * Delete User
   */
   public function DeleteUser (Request $request, Application $app)
   {
     parse_str($request->getContent(), $data);
-    $result = $app['dao.user']->deleteUser($data);
+    $result = json_encode($app['dao.user']->deleteUser($data));
 
     return new Response($result, 200);
   }

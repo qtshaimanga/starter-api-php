@@ -27,7 +27,7 @@ class UserDAO extends DAO implements UserProviderInterface
     return $entities;
   }
 
-  /* TODO
+  /*
   * User BY id
   */
   public function findUserById($id)
@@ -40,7 +40,6 @@ class UserDAO extends DAO implements UserProviderInterface
       throw new UsernameNotFoundException('User not found.');
     }
   }
-
 
   /*
   * ADD USER
@@ -65,9 +64,9 @@ class UserDAO extends DAO implements UserProviderInterface
   /*
   * Update User
   */
-  public function UpdateUser($data)
+  public function Update($data)
   {
-    $sql = "UPDATE USER SET (username, firstname, email, business) VALUES (?, ?, ?, ?) WHERE rowid=?";
+    $sql = "UPDATE USER SET username=?, firstname=?, email=?, business=? WHERE rowid=?";
     $resutl = $this->getDb()->fetchAssoc($sql, array($data['username'], $data['firstname'], $data['email'], $data['business'], $data['id']));
     return $resutl;
   }
@@ -75,26 +74,25 @@ class UserDAO extends DAO implements UserProviderInterface
   /*
   * Update User Role
   */
-  public function UpdateUserRole($data)
+  public function UpdateRole($data)
   {
-    $sql = "UPDATE USER SET (role) VALUES (?) WHERE rowid=?";
+    $sql = "UPDATE USER SET role=? WHERE rowid=?";
     $resutl = $this->getDb()->fetchAssoc($sql, array($data['role'], $data['id']));
     return $resutl;
   }
 
-
   /**
   * {@inheritDoc}
   */
-  public function loadUserByUsername($username)
+  public function loadUserByUsername($email)
   {
     $sql = "SELECT rowid, * FROM USER WHERE email=?";
-    $row = $this->getDb()->fetchAssoc($sql, array($username));
+    $row = $this->getDb()->fetchAssoc($sql, array($email));
 
     if ($row){
       return $this->buildDomainObject($row);
     }else{
-      throw new UsernameNotFoundException(sprintf('User "%s" not found.', $username));
+      throw new UsernameNotFoundException(sprintf('User "%s" not found.', $email));
     }
   }
 
@@ -107,7 +105,7 @@ class UserDAO extends DAO implements UserProviderInterface
     if (!$this->supportsClass($class)) {
       throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
     }
-    return $this->loadUserByUsername($user->getUsername());
+    return $this->loadUserByUsername($user->getEmail());
   }
 
   /**
@@ -132,8 +130,8 @@ class UserDAO extends DAO implements UserProviderInterface
       $user->setFirstname($row['firstname']);
       $user->setEmail($row['email']);
       $user->setBusiness($row['business']);
-      //$user->setPassword($row['password']);
-      //$user->setSalt($row['salt']);
+      $user->setPassword($row['password']);
+      $user->setSalt($row['salt']);
       $user->setRole($row['role']);
       return $user;
     }

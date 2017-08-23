@@ -29,13 +29,19 @@ class UserController
     try {
 
       if($app['security.authorization_checker']->isGranted('ROLE_ADMIN')) {
-        $response = $app['dao.user']->findAll();
+        $app['dao.user']->findAll();
+        $response = [
+            'sucess' => true,
+            'acces' => 'allowed',
+            'action' => 'all users',
+        ];
       }else{
         throw new AccessDeniedException('Access denied for this username...');
       }
 
     } catch (AccessDeniedException $e) {
       $response = [
+          'sucess' => false,
           'acces' => 'denied',
           'error' => 'Invalid role...',
       ];
@@ -52,29 +58,26 @@ class UserController
   public function UserByToken (Application $app)
   {
 
-    $jwt = 'no';
+    $jwt = 'denied';
+    $role = 'unknown';
     $token = $app['security.token_storage']->getToken();
-
     if ($token instanceof Silex\Component\Security\Http\Token\JWTToken) {
-        $jwt = 'yes';
+        $jwt = 'allowed';
     }
-    $granted = 'no';
     if($app['security.authorization_checker']->isGranted('ROLE_ADMIN')) {
-        $granted = 'yes';
+      $role = 'ROLE_ADMIN';
     }
-    $granted_user = 'no';
-    if($app['security.authorization_checker']->isGranted('ROLE_USER')) {
-        $granted_user = 'yes';
-    }
-    $granted_super = 'no';
-    if($app['security.authorization_checker']->isGranted('ROLE_SUPER_ADMIN')) {
-        $granted_super = 'yes';
-    }
-
-    $user = $token->getUser();
+    $response = [
+        'sucess' => true,
+        'acces' => $jwt,
+        'role' => $role,
+        'action' => 'current user',
+        'user' => $token->getUser(),
+        'token' => $token->getCredentials()
+    ];
 
     $format = "json";
-    $result = $app['serializer']->serialize($user, $format);
+    $result = $app['serializer']->serialize($response, $format);
     return new Response($result, 200);
 
   }
@@ -88,14 +91,15 @@ class UserController
     parse_str($request->getContent(), $vars);
 
     try {
-      if (empty($vars['_username']) || empty($vars['_password'])) {
-          throw new UsernameNotFoundException(sprintf('Username "%s" is empty...'));
+      if (empty($vars['email']) || empty($vars['password'])) {
+          throw new UsernameNotFoundException(sprintf('Email "%s" is empty...'));
       }
 
-      $user = $app['dao.user']->loadUserByUsername($vars['_username']);
+      $format = "json";
+      $user = $app['dao.user']->loadUserByUsername($vars['email']);
 
-      if (! $app['security.encoder.digest']->isPasswordValid($user->getPassword(), $vars['_password'], $user->getSalt() ) ) {
-          throw new UsernameNotFoundException(sprintf('Username "%s" is not valid...'));
+      if (! $app['security.encoder.digest']->isPasswordValid($user->getPassword(), $vars['password'], $user->getSalt() ) ) {
+          throw new UsernameNotFoundException(sprintf('Email "%s" is not valid...'));
       } else {
           $response = [
               'success' => true,
@@ -108,12 +112,12 @@ class UserController
           'success' => false,
           'error' => 'Invalid credentials...',
       ];
+
     }
 
     return $app->json($response, ($response['success'] == true ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST));
 
   }
-
 
   /*
   * POST register
@@ -121,13 +125,25 @@ class UserController
   public function Register (Request $request, Application $app)
   {
     parse_str($request->getContent(), $data);
-    $salt = 'cocacola';
     $encoder = new MessageDigestPasswordEncoder();
-    $data['salt'] = $salt;
+    $salt = 'cocacola';
     $data['_password'] = $encoder->encodePassword($data['password'], $salt);
-    $result = json_encode($app['dao.user']->addUser($data));
+    $data['salt'] = $salt;
+    $data['role'] = 'ROLE_USER';
+    if($data['password'] && $data['email'] && $data['username']){
+      $app['dao.user']->addUser($data);
+      $response = [
+          'success' => true,
+          'action' => 'User added...',
+      ];
+    }else{
+      $response = [
+          'success' => false,
+          'error' => 'Invalid credentials...',
+      ];
+    }
 
-    return new Response($result, 200);
+    return new Response(json_encode($response), 200);
   }
 
 
@@ -136,13 +152,38 @@ class UserController
   */
   public function UpdateUser (Request $request, Application $app)
   {
-    // check if is my id or if i'm ROLE_ADMIN
-    parse_str($request->getContent(), $data);
-    $user = $app['dao.user']->UpdateUser($data);
-    $format = "json";
-    $result = $app['serializer']->serialize($user, $format);
 
+    try{
+
+      $token = $app['security.token_storage']->getToken();
+      $user = $token->getUser();
+      parse_str($request->getContent(), $data);
+
+      if($app['security.authorization_checker']->isGranted('ROLE_ADMIN') || $user->getId() == $data['id'] ) {
+        $app['dao.user']->Update($data);
+        $response = [
+          'success' => true,
+          'acces' => 'allowed',
+          'action' => 'user updated'
+        ];
+      }else{
+        throw new AccessDeniedException('Access denied for this username...');
+      }
+
+    } catch (AccessDeniedException $e) {
+
+      $response = [
+        'success' => false,
+        'acces' => 'denied',
+        'error' => 'Invalid role...',
+      ];
+
+    }
+
+    $format = "json";
+    $result = $app['serializer']->serialize($response, $format);
     return new Response($result, 200);
+
   }
 
   /*
@@ -150,29 +191,34 @@ class UserController
   */
   public function UpdateUserRole (Request $request, Application $app)
   {
-    // check if i'm ROLE_ADMIN
-    parse_str($request->getContent(), $data);
-    $user = $app['dao.user']->UpdateUserRole($data);
+    try{
+
+      $token = $app['security.token_storage']->getToken();
+      $user = $token->getUser();
+      parse_str($request->getContent(), $data);
+
+      if($app['security.authorization_checker']->isGranted('ROLE_ADMIN')) {
+        $app['dao.user']->UpdateRole($data);
+        $response = [
+          'success' => true,
+          'acces' => 'allowed',
+          'action' => 'role updated'
+        ];
+      }else{
+        throw new AccessDeniedException('Access denied for this username...');
+      }
+
+    }catch(AccessDeniedException $e){
+      $response = [
+        'success' => false,
+        'acces' => 'denied',
+        'error' => 'Invalid role...',
+      ];
+    }
+
     $format = "json";
-    $result = $app['serializer']->serialize($user, $format);
-
+    $result = $app['serializer']->serialize($response, $format);
     return new Response($result, 200);
-  }
-
-  /*
-  * POST Renewal
-  */
-  public function Renewal (Request $request, Application $app)
-  {
-
-  }
-
-  /*
-  * POST Logout
-  */
-  public function Logout (Request $request, Application $app)
-  {
-
   }
 
   /*
@@ -180,11 +226,15 @@ class UserController
   */
   public function UserById (Application $app, $id)
   {
-    $result = $app['dao.user']->findUserById($id);
+    $user = $app['dao.user']->findUserById($id);
+    $response = [
+        'sucess' => true,
+        'action' => 'user by id',
+        'user' => $user
+    ];
     $format = "json";
-    $user = $app['serializer']->serialize($result, $format);
-
-    return new Response($user, 200);
+    $result = $app['serializer']->serialize($response, $format);
+    return new Response($result, 200);
   }
 
   /*
@@ -192,12 +242,82 @@ class UserController
   */
   public function DeleteUser (Request $request, Application $app)
   {
-    parse_str($request->getContent(), $data);
-    $result = json_encode($app['dao.user']->deleteUser($data));
+    try{
 
+      $token = $app['security.token_storage']->getToken();
+      $user = $token->getUser();
+      parse_str($request->getContent(), $data);
+
+      if($app['security.authorization_checker']->isGranted('ROLE_ADMIN') || $user->getId() == $data['id'] ) {
+        $app['dao.user']->deleteUser($data);
+        $response = [
+          'sucess' => true,
+          'acces' => 'allowed',
+          'action' => 'user deleted'
+        ];
+      }else{
+        throw new AccessDeniedException('Access denied for this username...');
+      }
+    }catch(AccessDeniedException $e){
+      $response = [
+        'sucess' => false,
+        'acces' => 'denied',
+        'error' => 'Invalid role...',
+      ];
+    }
+
+    $format = "json";
+    $result = $app['serializer']->serialize($response, $format);
     return new Response($result, 200);
   }
 
+  /*
+  * POST Renewal
+  */
+  public function Renewal (Application $app)
+  {
+    $token = $app['security.token_storage']->getToken();
+    $_user = $token->getUser();
+    $user = $app['dao.user']->refreshUser($_user);
+
+    $format = "json";
+    $u = $app['serializer']->serialize($user, $format);
+
+    $response = [
+      'sucess' => true,
+      'acces' => 'allowed',
+      'user' => $u,
+      'token' => $app['security.jwt.encoder']->encode(['email' => $user->getEmail()]),
+    ];
+
+    return new Response(json_encode($response), 200);
+  }
+
+  /*
+  * POST Logout
+  */
+  public function Logout (Request $request, Application $app)
+  {
+    $token = $app['security.token_storage']->getToken();
+    $user = $token->getUser();
+
+    if($app['security.authorization_checker']->isGranted('ROLE_USER') || $app['security.authorization_checker']->isGranted('ROLE_ADMIN')){
+      $response = [
+        'sucess' => true,
+        'acces' => 'allowed',
+        'user' => $user,
+        'token' => null,
+      ];
+    }else{
+      $response = [
+        'sucess' => false,
+        'acces' => 'denied'
+      ];
+    }
+
+    return new Response(json_encode($response), 200);
+
+  }
 
   /* TODO
   * will use for admin path

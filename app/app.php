@@ -46,7 +46,7 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
         ),
         'secured' => array(
             'pattern' => '^.*$',
-            'logout' => array('logout_path' => '/api/logout'),
+            'logout' => array('logout_path' => '/logout'),
             'users' => function () use ($app) {
                 return new Api\UserBundle\DAO\UserDAO($app['db']);
             },

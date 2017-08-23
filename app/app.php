@@ -18,12 +18,12 @@ ExceptionHandler::register();
 $app->register(new Silex\Provider\DoctrineServiceProvider());
 $app->register(new Silex\Provider\TwigServiceProvider(), array('twig.path' => __DIR__.'/../views'));
 
-$app['twig'] = $app->share($app->extend('twig', function(Twig_Environment $twig, $app) {
+$app['twig'] = $app->extend('twig', function(Twig_Environment $twig, $app) {
     $twig->addExtension(new Twig_Extensions_Extension_Text());
     return $twig;
-}));
+});
 
-$app->register(new Silex\Provider\UrlGeneratorServiceProvider());
+$app->register(new Silex\Provider\RoutingServiceProvider());
 
 $app->before(function (Symfony\Component\HttpFoundation\Request $request) {
     if ($request->getMethod() === "OPTIONS") {
@@ -47,9 +47,9 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
         'secured' => array(
             'pattern' => '^.*$',
             'logout' => array('logout_path' => '/api/logout'),
-            'users' => $app->share(function () use ($app) {
+            'users' => function () use ($app) {
                 return new Api\UserBundle\DAO\UserDAO($app['db']);
-            }),
+            },
             'jwt' => array(
                 'use_forward' => true,
                 'require_previous_session' => false,
@@ -74,20 +74,23 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
      )
 ));
 
-// Register security's services
+// Register SecurityServiceProvider
 $app->register(new Silex\Provider\SecurityServiceProvider());
 
 $app->register(new Silex\Provider\SecurityJWTServiceProvider());
 
-//Register service provider for JWT/cnam
-$app['users'] = $app->share(function ($app) {
+//Register DAO for JWT/cnam (JWTServiceProvider)
+$app['users'] = function ($app) {
     return new Api\UserBundle\DAO\UserDAO($app['db']);
-});
+};
 
-// Register DATABASE services
-$app['dao.user'] = $app->share(function ($app) {
+// Register DATABASEServiceProvider
+$app['dao.user'] = function ($app) {
     return new Api\UserBundle\DAO\UserDAO($app['db']);
-});
+};
+
+// register SerializerServiceProvider
+$app->register(new Silex\Provider\SerializerServiceProvider());
 
 // Register error handler
 $app->error(function (\Exception $e, $code) use ($app) {
@@ -106,7 +109,11 @@ $app->error(function (\Exception $e, $code) use ($app) {
 
 $app->register(new Silex\Provider\FormServiceProvider());
 
-$app->register(new Silex\Provider\TranslationServiceProvider());
+$app->register(new Silex\Provider\LocaleServiceProvider());
+
+$app->register(new Silex\Provider\TranslationServiceProvider(), array(
+    'locale_fallbacks' => array('fr'),
+));
 
 $app->register(new Silex\Provider\ValidatorServiceProvider());
 

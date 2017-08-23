@@ -3,6 +3,7 @@
 namespace Api\UserBundle\Controller;
 
 use Silex\Application;
+use Silex\Provider\SerializerServiceProvider;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -46,7 +47,9 @@ class UserController
 
     }
 
-    return json_encode($response);
+    $format = "json";
+    $users = $app['serializer']->serialize($response, $format);
+    return new Response($users, 200);
   }
 
 
@@ -74,15 +77,9 @@ class UserController
 
     $user = $token->getUser();
 
-    return $app->json([
-        'username' => $user->getUsername(),
-        'firstname' => $user->getFirstname(),
-        'email' => $user->getEmail(),
-        'auth' => $jwt,
-        'granted' => $granted,
-        'granted_user' => $granted_user,
-        'granted_super' => $granted_super,
-    ]);
+    $format = "json";
+    $result = $app['serializer']->serialize($user, $format);
+    return new Response($result, 200);
 
   }
 
@@ -132,26 +129,39 @@ class UserController
     $data['_password'] = $encoder->encodePassword($data['password'], $salt);
     $result = $app['dao.user']->addUser($data);
 
-    return json_encode($result);
+    return new Response($result, 200);
   }
 
   /*
   * Logout
   */
-  public function Logout (Request $request, Application $app)
-  {
-
-    return false
-  }
+  // public function Logout (Request $request, Application $app)
+  // {
+  //
+  //   return false
+  // }
 
   /*
   * Delete User
+  */
+  public function UserById (Application $app, $id)
+  {
+    $result = $app['dao.user']->findUserById($id);
+    $format = "json";
+    $user = $app['serializer']->serialize($result, $format);
+
+    return new Response($user, 200);
+  }
+
+  /*
+  * Find User By id
   */
   public function DeleteUser (Request $request, Application $app)
   {
     parse_str($request->getContent(), $data);
     $result = $app['dao.user']->deleteUser($data);
-    return json_encode($result);
+
+    return new Response($result, 200);
   }
 
 

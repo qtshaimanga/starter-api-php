@@ -19,17 +19,26 @@ class UserDAO extends DAO implements UserProviderInterface
   {
     $sql = "SELECT rowid, * FROM USER";
     $result = $this->getDb()->fetchAll($sql);
-    return $result;
+    $entities = array();
+    foreach ($result as $row) {
+      $id = $row['rowid'];
+      $entities[$id] = $this->buildDomainObject($row);
+    }
+    return $entities;
   }
 
   /* TODO
   * User BY id
   */
-  public function findAllById($id)
+  public function findUserById($id)
   {
-    // $sql = "SELECT rowid, * FROM USER WHERE rowid=?";
-    // $result = $this->getDb()->fetchAll($sql);
-    // return $result;
+    $sql = "SELECT rowid, * FROM USER WHERE rowid=?";
+    $row = $this->getDb()->fetchAssoc($sql, array($id));
+    if ($row){
+      return $this->buildDomainObject($row);
+    }else{
+      throw new UsernameNotFoundException('User not found.');
+    }
   }
 
 
@@ -49,7 +58,7 @@ class UserDAO extends DAO implements UserProviderInterface
   public function deleteUser($user)
   {
     $sql = "DELETE FROM USER WHERE rowid=?";
-    $resutl = $this->getDb()->fetchAssoc($user['id']);
+    $resutl = $this->getDb()->fetchAssoc($sql, array($user['id']));
     return $resutl;
   }
 
@@ -103,8 +112,8 @@ class UserDAO extends DAO implements UserProviderInterface
       $user->setFirstname($row['firstname']);
       $user->setEmail($row['email']);
       $user->setBusiness($row['business']);
-      $user->setPassword($row['password']);
-      $user->setSalt($row['salt']);
+      //$user->setPassword($row['password']);
+      //$user->setSalt($row['salt']);
       $user->setRole($row['role']);
       return $user;
     }
